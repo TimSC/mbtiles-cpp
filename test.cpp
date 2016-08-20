@@ -9,6 +9,21 @@ using namespace std;
 #include "MBTileReader.h"
 #include "vector_tile20/vector_tile.pb.h"
 
+#include <string>
+#include <sstream>
+#include <vector>
+
+using namespace std;
+
+// http://stackoverflow.com/a/236803/4288232
+void strsplit(const string &s, char delim, vector<string> &elems) {
+    stringstream ss(s);
+    string item;
+    while (getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+}
+
 int main(int argc, char **argv)
 {
 	class MBTileReader mbTileReader("cairo_egypt.mbtiles");	
@@ -17,6 +32,10 @@ int main(int argc, char **argv)
 	cout << "type:" << mbTileReader.GetMetadata("type") << endl;
 	string version = mbTileReader.GetMetadata("version");
 	cout << "version:" << version << endl;
+	vector<string> versionSplit;
+	strsplit(version, '.', versionSplit);
+	vector<int> versionInts;
+	for (int i=0;i<versionSplit.size();i++) versionInts.push_back(atoi(versionSplit[i].c_str()));
 	cout << "description:" << mbTileReader.GetMetadata("description") << endl;
 	string format = mbTileReader.GetMetadata("format");
 	cout << "format:" << format << endl;
@@ -44,7 +63,7 @@ int main(int argc, char **argv)
 	string blob;
 	mbTileReader.GetTile(14,9618,9611,blob);
 
-	if(format == "pbf" && version == "2.0")
+	if(format == "pbf" && versionInts[0] == 2)
 	{
 		std::stringbuf buff;
 		buff.sputn(blob.c_str(), blob.size());
