@@ -43,7 +43,6 @@ int main(int argc, char **argv)
 
 	string blob;
 	mbTileReader.GetTile(14,9618,9611,blob);
-	cout << "blob size: "<< blob.size() << endl;
 
 	if(format == "pbf" && version == "2.0")
 	{
@@ -52,16 +51,17 @@ int main(int argc, char **argv)
 		DecodeGzip dec(buff);
 
 		string tileData;
+
 		char tmp[1024];
 		while(dec.in_avail())
 		{
 			streamsize bytes = dec.sgetn(tmp, 1024);
-			tileData.insert(0, tmp, bytes);
+			tileData.append(tmp, bytes);
 		}
 
 		vector_tile::Tile tile;
-		cout << tile.ParseFromString(tileData) << endl;
-		cout << tile.layers_size() << endl;
+		cout << "ParseFromString: " << tile.ParseFromString(tileData) << endl;
+		cout << "Num layers: " << tile.layers_size() << endl;
 	}
 }
 
