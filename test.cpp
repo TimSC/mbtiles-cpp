@@ -3,8 +3,11 @@
 #include <string>
 #include <cstring>
 #include <map>
+#include <sstream>
+#include "ReadGzip.h"
 using namespace std;
 #include "MBTileReader.h"
+#include "vector_tile20/vector_tile.pb.h"
 
 int main(int argc, char **argv)
 {
@@ -12,9 +15,11 @@ int main(int argc, char **argv)
 	
 	cout << "name:" << mbTileReader.GetMetadata("name") << endl;
 	cout << "type:" << mbTileReader.GetMetadata("type") << endl;
-	cout << "version:" << mbTileReader.GetMetadata("version") << endl;
+	string version = mbTileReader.GetMetadata("version");
+	cout << "version:" << version << endl;
 	cout << "description:" << mbTileReader.GetMetadata("description") << endl;
-	cout << "format:" << mbTileReader.GetMetadata("format") << endl;
+	string format = mbTileReader.GetMetadata("format");
+	cout << "format:" << format << endl;
 	cout << "bounds:" << mbTileReader.GetMetadata("bounds") << endl;
 
 	if(0) //Get metadata fields
@@ -39,5 +44,24 @@ int main(int argc, char **argv)
 	string blob;
 	mbTileReader.GetTile(14,9618,9611,blob);
 	cout << "blob size: "<< blob.size() << endl;
+
+	if(format == "pbf" && version == "2.0")
+	{
+		std::stringbuf buff;
+		buff.sputn(blob.c_str(), blob.size());
+		DecodeGzip dec(buff);
+
+		string tileData;
+		char tmp[1024];
+		while(dec.in_avail())
+		{
+			streamsize bytes = dec.sgetn(tmp, 1024);
+			tileData.insert(0, tmp, bytes);
+		}
+
+		vector_tile::Tile tile;
+		cout << tile.ParseFromString(tileData) << endl;
+		cout << tile.layers_size() << endl;
+	}
 }
 
