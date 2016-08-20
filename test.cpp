@@ -37,6 +37,49 @@ string FeatureTypeToStr(::vector_tile::Tile_GeomType type)
 	return "Unknown type";
 }
 
+string ValueToStr(const ::vector_tile::Tile_Value &value)
+{
+	if(value.has_string_value())
+		return value.string_value();
+	if(value.has_float_value())
+	{
+		stringstream ss;
+		ss << value.float_value();
+		return ss.str();
+	}
+	if(value.has_double_value())
+	{
+		stringstream ss;
+		ss << value.double_value();
+		return ss.str();
+	}
+	if(value.has_int_value())
+	{
+		stringstream ss;
+		ss << value.int_value();
+		return ss.str();
+	}
+	if(value.has_uint_value())
+	{
+		stringstream ss;
+		ss << value.uint_value();
+		return ss.str();
+	}
+	if(value.has_sint_value())
+	{
+		stringstream ss;
+		ss << value.sint_value();
+		return ss.str();
+	}
+	if(value.has_bool_value())
+	{
+		stringstream ss;
+		ss << value.bool_value();
+		return ss.str();
+	}
+	return "Error: Unknown value type";
+}
+
 int main(int argc, char **argv)
 {
 	class MBTileReader mbTileReader("cairo_egypt.mbtiles");	
@@ -109,8 +152,16 @@ int main(int argc, char **argv)
 			{
 				const ::vector_tile::Tile_Feature &feature =layer.features(featureNum);
 				cout << featureNum << "," << feature.type() << "," << FeatureTypeToStr(feature.type()) << endl;
+				for(int tagNum = 0; tagNum < feature.tags_size(); tagNum+=2)
+				{	
+					cout << layer.keys(feature.tags(tagNum)) << "=";
+					const ::vector_tile::Tile_Value &value = layer.values(feature.tags(tagNum+1));
+					cout << ValueToStr(value) << endl;
+				}
 			}
 		}
+
+		
 	}
 }
 
