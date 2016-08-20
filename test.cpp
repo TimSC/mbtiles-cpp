@@ -81,6 +81,13 @@ int main(int argc, char **argv)
 		vector_tile::Tile tile;
 		cout << "ParseFromString: " << tile.ParseFromString(tileData) << endl;
 		cout << "Num layers: " << tile.layers_size() << endl;
+		
+		for(int layerNum = 0; layerNum < tile.layers_size(); layerNum++)
+		{
+			const ::vector_tile::Tile_Layer &layer = tile.layers(layerNum);
+			cout << "layer version: " << layer.version() << endl;
+			cout << "layer name: " << layer.name() << endl;
+		}
 	}
 }
 
