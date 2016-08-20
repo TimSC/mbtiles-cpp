@@ -12,6 +12,7 @@ public:
 	virtual ~MBTileReader();
 
 	std::string GetMetadata(const char *metaField);
+	void ListTiles();
 
 protected:
 	sqlite3 *db;
@@ -19,6 +20,9 @@ protected:
 
 	static int MetadataCallbackStatic(void *obj, int argc, char **argv, char **azColName);
 	int MetadataCallback(int argc, char **argv, char **azColName);
+
+	int ListTilesCallbackStatic(void *obj, int argc, char **argv, char **azColName);
+	int ListTilesCallback(int argc, char **argv, char **azColName);
 
 };
 

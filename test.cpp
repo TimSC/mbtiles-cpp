@@ -17,5 +17,6 @@ int main(int argc, char **argv)
 	cout << "format:" << mbTileReader.GetMetadata("format") << endl;
 	cout << "bounds:" << mbTileReader.GetMetadata("bounds") << endl;
 
+	mbTileReader.ListTiles();
 }
 
