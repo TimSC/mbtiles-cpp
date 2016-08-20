@@ -151,7 +151,10 @@ int main(int argc, char **argv)
 			for(int featureNum = 0; featureNum < layer.features_size(); featureNum++)
 			{
 				const ::vector_tile::Tile_Feature &feature =layer.features(featureNum);
-				cout << featureNum << "," << feature.type() << "," << FeatureTypeToStr(feature.type()) << endl;
+				cout << featureNum << "," << feature.type() << "," << FeatureTypeToStr(feature.type());
+				if(feature.has_id())
+					cout << ",id=" << feature.id();
+				cout << endl;
 				for(int tagNum = 0; tagNum < feature.tags_size(); tagNum+=2)
 				{	
 					cout << layer.keys(feature.tags(tagNum)) << "=";
