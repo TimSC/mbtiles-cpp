@@ -4,6 +4,7 @@
 #include <math.h>
 #include <iostream>
 #include <sstream>
+#include <vector>
 #include <utility>
 using namespace std;
 
@@ -64,7 +65,10 @@ string ValueToStr(const ::vector_tile::Tile_Value &value)
 }
 
 typedef std::pair<double, double> Point2D;
-inline double CheckWinding(std::vector<Point2D> pts) 
+typedef std::vector<Point2D> LineLoop2D;
+typedef std::pair<LineLoop2D, std::vector<LineLoop2D> > Polygon2D;
+
+inline double CheckWinding(LineLoop2D pts) 
 {
 	double total = 0.0;
 	for(size_t i=0; i < pts.size(); i++)
@@ -77,7 +81,9 @@ inline double CheckWinding(std::vector<Point2D> pts)
 }
 
 void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
-	int extent, int tileZoom, int tileColumn, int tileRow)
+	int extent, int tileZoom, int tileColumn, int tileRow, 
+	vector<Point2D> &pointsOut, 
+	vector<vector<Point2D> > &linesOut)
 {
 	long unsigned int numTiles = pow(2,tileZoom);
 	double lonMin = tilex2long(tileColumn, tileZoom);
@@ -91,6 +97,8 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 
 	int cursorx = 0, cursory = 0;
 	double prevx = 0.0, prevy = 0.0;
+	pointsOut.clear();
+	linesOut.clear();
 
 	for(int i=0; i < feature.geometry_size(); i ++)
 	{
@@ -109,7 +117,14 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 				cursory += value2;
 				double px = dLon * double(cursorx) / double(extent) + lonMin;
 				double py = - dLat * double(cursory) / double(extent) + latMax;
-				cout << "MoveTo " << cursorx << "," << cursory << ",(" << px << "," << py << ")" << endl;
+				//cout << "MoveTo " << cursorx << "," << cursory << ",(" << px << "," << py << ")" << endl;
+				if (feature.type() == vector_tile::Tile_GeomType_POINT)
+					pointsOut.push_back(Point2D(px, py));
+				if (feature.type() == vector_tile::Tile_GeomType_LINESTRING && points.size() > 0)
+				{
+					linesOut.push_back(points);
+					points.clear();
+				}
 				prevx = px; 
 				prevy = py;
 				i += 2;
@@ -130,8 +145,9 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 				cursory += value2;
 				double px = dLon * double(cursorx) / double(extent) + lonMin;
 				double py = - dLat * double(cursory) / double(extent) + latMax;
-				cout << "LineTo " << cursorx << "," << cursory << ",(" << px << "," << py << ")" << endl;
-				points.push_back(Point2D(px, py));
+				//cout << "LineTo " << cursorx << "," << cursory << ",(" << px << "," << py << ")" << endl;
+				if (feature.type() != vector_tile::Tile_GeomType_POINT)
+					points.push_back(Point2D(px, py));
 				i += 2;
 				prevCmdId = cmdId;
 			}
@@ -142,14 +158,17 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 			// https://github.com/mapbox/vector-tile-spec/issues/49
 			for(int j=0; j < cmdCount; j++)
 			{
-				cout << "ClosePath" << endl;
-				cout << "winding: " << CheckWinding(points) << endl;
+				//cout << "ClosePath" << endl;
+				//cout << "winding: " << CheckWinding(points) << endl;
 				points.clear();
 				prevCmdId = cmdId;
 			}
 		}
 		
 	}
+
+	if (feature.type() == vector_tile::Tile_GeomType_LINESTRING)
+		linesOut.push_back(points);
 }
 
 DecodeVectorTile::DecodeVectorTile(class DecodeVectorTileResults &output)
@@ -191,7 +210,24 @@ void DecodeVectorTile::DecodeTileData(const std::string &tileData, int tileZoom,
 			}
 
 			this->output->Feature(feature.type(), feature.has_id(), feature.id(), tagMap);
-			DecodeGeometry(feature, layer.extent(), tileZoom, tileColumn, tileRow);
+			if (feature.type() == ::vector_tile::Tile_GeomType_POINT)
+			{
+				vector<Point2D> points;
+				vector<vector<Point2D> > lines;
+				DecodeGeometry(feature, layer.extent(), tileZoom, tileColumn, tileRow, 
+					points, lines);
+				for(size_t i =0; i < points.size(); i++)
+					cout << "POINT("<<points[i].first<<","<<points[i].second<<") ";
+				for(size_t i =0; i < lines.size(); i++)
+				{
+					cout << "LINESTRING(";
+					vector<Point2D> &linePts = lines[i];
+					for(size_t j =0; j < linePts.size(); j++)
+						cout << "("<<linePts[i].first<<","<<linePts[i].second<<") ";
+					cout << ") ";
+				}
+				cout << endl;
+			}
 		}
 
 		this->output->LayerEnd();
@@ -252,6 +288,8 @@ void DecodeVectorTileResults::LayerEnd()
 
 void DecodeVectorTileResults::Feature(int typeEnum, bool hasId, unsigned long long id, const map<string, string> &tagMap)
 {
+	if (typeEnum != ::vector_tile::Tile_GeomType_POINT) return;
+
 	cout << typeEnum << "," << FeatureTypeToStr((::vector_tile::Tile_GeomType)typeEnum);
 	if(hasId)
 		cout << ",id=" << id;
