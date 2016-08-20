@@ -85,9 +85,9 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 {
 	long unsigned int numTiles = pow(2,tileZoom);
 	double lonMin = tilex2long(tileColumn, tileZoom);
-	double latMin = tiley2lat(numTiles-tileRow, tileZoom);//Why is latitude no where near expected?
+	double latMax = tiley2lat(numTiles-tileRow-1, tileZoom);//Why is latitude no where near expected?
 	double lonMax = tilex2long(tileColumn+1, tileZoom);
-	double latMax = tiley2lat(numTiles-tileRow-1, tileZoom);
+	double latMin = tiley2lat(numTiles-tileRow, tileZoom);
 	double dLat = latMax - latMin;
 	double dLon = lonMax - lonMin;
 
@@ -179,7 +179,7 @@ int main(int argc, char **argv)
 	string blob;
 	int tileZoom = 14;
 	int tileColumn = 9618;
-	int tileRow = 9611;
+	int tileRow = 9611; //6772 in OSM numbering
 	mbTileReader.GetTile(tileZoom, tileColumn, tileRow, blob);
 
 	if(format == "pbf" && versionInts[0] == 2)
