@@ -4,6 +4,9 @@
 #include <sqlite3.h>
 #include <string>
 #include <map>
+#include <vector>
+
+typedef std::vector<std::vector<unsigned int> > TileInfoRows;
 
 class MBTileReader
 {
@@ -12,7 +15,12 @@ public:
 	virtual ~MBTileReader();
 
 	std::string GetMetadata(const char *metaField);
-	void ListTiles();
+	void GetMetadataFields(std::vector<std::string> &fieldNamesOut);
+	void ListTiles(TileInfoRows &tileInfoRowsOut);
+	void GetTile(unsigned int zoomLevel, 
+		unsigned int tileColumn, 
+		unsigned int tileRow,
+		std::string &blobOut);
 
 protected:
 	sqlite3 *db;
@@ -21,9 +29,7 @@ protected:
 	static int MetadataCallbackStatic(void *obj, int argc, char **argv, char **azColName);
 	int MetadataCallback(int argc, char **argv, char **azColName);
 
-	int ListTilesCallbackStatic(void *obj, int argc, char **argv, char **azColName);
-	int ListTilesCallback(int argc, char **argv, char **azColName);
-
+	static int ListTilesCallbackStatic(void *obj, int argc, char **argv, char **azColName);
 };
 
 #endif //MBTILE_READER_H
