@@ -24,6 +24,19 @@ void strsplit(const string &s, char delim, vector<string> &elems) {
     }
 }
 
+string FeatureTypeToStr(::vector_tile::Tile_GeomType type)
+{
+	if(type == ::vector_tile::Tile_GeomType_UNKNOWN)
+		return "Unknown";
+	if(type == ::vector_tile::Tile_GeomType_POINT)
+		return "Point";
+	if(type == ::vector_tile::Tile_GeomType_LINESTRING)
+		return "LineString";
+	if(type == ::vector_tile::Tile_GeomType_POLYGON)
+		return "Polygon";
+	return "Unknown type";
+}
+
 int main(int argc, char **argv)
 {
 	class MBTileReader mbTileReader("cairo_egypt.mbtiles");	
@@ -87,6 +100,16 @@ int main(int argc, char **argv)
 			const ::vector_tile::Tile_Layer &layer = tile.layers(layerNum);
 			cout << "layer version: " << layer.version() << endl;
 			cout << "layer name: " << layer.name() << endl;
+			cout << "layer extent: " << layer.extent() << endl;
+			cout << "layer keys_size(): " << layer.keys_size() << endl;
+			cout << "layer values_size(): " << layer.values_size() << endl;
+			cout << "layer features_size(): " << layer.features_size() << endl;
+
+			for(int featureNum = 0; featureNum < layer.features_size(); featureNum++)
+			{
+				const ::vector_tile::Tile_Feature &feature =layer.features(featureNum);
+				cout << featureNum << "," << feature.type() << "," << FeatureTypeToStr(feature.type()) << endl;
+			}
 		}
 	}
 }
