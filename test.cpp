@@ -8,7 +8,7 @@
 using namespace std;
 #include "MBTileReader.h"
 #include "vector_tile20/vector_tile.pb.h"
-
+#include <math.h>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -80,8 +80,17 @@ string ValueToStr(const ::vector_tile::Tile_Value &value)
 	return "Error: Unknown value type";
 }
 
-void DecodeGeometry(const ::vector_tile::Tile_Feature &feature)
+void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
+	int extent, int tileZoom, int tileColumn, int tileRow)
 {
+	long unsigned int numTiles = pow(2,tileZoom);
+	double lonMin = tilex2long(tileColumn, tileZoom);
+	double latMin = tiley2lat(numTiles-tileRow, tileZoom);//Why is latitude no where near expected?
+	double lonMax = tilex2long(tileColumn+1, tileZoom);
+	double latMax = tiley2lat(numTiles-tileRow-1, tileZoom);
+	double dLat = latMax - latMin;
+	double dLon = lonMax - lonMin;
+
 	int cursorx = 0, cursory = 0;
 	for(int i=0; i < feature.geometry_size(); i ++)
 	{
@@ -98,7 +107,9 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature)
 				int value2 = ((v >> 1) ^ (-(v & 1)));
 				cursorx += value1;
 				cursory += value2;
-				cout << "MoveTo " << cursorx << "," << cursory << endl;
+				double px = dLon * double(cursorx) / double(extent) + lonMin;
+				double py = - dLat * double(cursory) / double(extent) + latMax;
+				cout << "MoveTo " << cursorx << "," << cursory << ",(" << px << "," << py << ")" << endl;
 				i += 2;
 			}
 		}
@@ -112,7 +123,9 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature)
 				int value2 = ((v >> 1) ^ (-(v & 1)));
 				cursorx += value1;
 				cursory += value2;
-				cout << "LineTo " << cursorx << "," << cursory << endl;
+				double px = dLon * double(cursorx) / double(extent) + lonMin;
+				double py = - dLat * double(cursory) / double(extent) + latMax;
+				cout << "LineTo " << cursorx << "," << cursory << ",(" << px << "," << py << ")" << endl;
 				i += 2;
 			}
 		}
@@ -164,7 +177,10 @@ int main(int argc, char **argv)
 	}
 
 	string blob;
-	mbTileReader.GetTile(14,9618,9611,blob);
+	int tileZoom = 14;
+	int tileColumn = 9618;
+	int tileRow = 9611;
+	mbTileReader.GetTile(tileZoom, tileColumn, tileRow, blob);
 
 	if(format == "pbf" && versionInts[0] == 2)
 	{
@@ -195,6 +211,9 @@ int main(int argc, char **argv)
 			cout << "layer values_size(): " << layer.values_size() << endl;
 			cout << "layer features_size(): " << layer.features_size() << endl;
 
+			//The spec says "Decoders SHOULD parse the version first to ensure that 
+			//they are capable of decoding each layer." This has not been implemented.
+
 			for(int featureNum = 0; featureNum < layer.features_size(); featureNum++)
 			{
 				const ::vector_tile::Tile_Feature &feature =layer.features(featureNum);
@@ -208,11 +227,9 @@ int main(int argc, char **argv)
 					const ::vector_tile::Tile_Value &value = layer.values(feature.tags(tagNum+1));
 					cout << ValueToStr(value) << endl;
 				}
-				DecodeGeometry(feature);
+				DecodeGeometry(feature, layer.extent(), tileZoom, tileColumn, tileRow);
 			}
 		}
-
-		
 	}
 }
 
