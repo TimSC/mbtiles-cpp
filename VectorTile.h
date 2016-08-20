@@ -2,6 +2,7 @@
 #define _VECTOR_TILE_H
 
 #include <string>
+#include <map>
 
 ///Derive a class from this to act as storage for the results. This
 ///class only defines the interface.
@@ -14,6 +15,8 @@ public:
 	virtual void NumLayers(int numLayers);
 	virtual void LayerStart(const char *name, int version);
 	virtual void LayerEnd();
+	virtual void Feature(int typeEnum, bool hasId, unsigned long long id, 
+		const std::map<std::string, std::string> &tagMap);
 };
 
 class DecodeVectorTile

@@ -181,20 +181,16 @@ void DecodeVectorTile::DecodeTileData(const std::string &tileData, int tileZoom,
 
 		for(int featureNum = 0; featureNum < layer.features_size(); featureNum++)
 		{
-			const ::vector_tile::Tile_Feature &feature =layer.features(featureNum);
+			const ::vector_tile::Tile_Feature &feature = layer.features(featureNum);
 
-			//if(feature.type() != ::vector_tile::Tile_GeomType_POLYGON) continue;
-			cout << featureNum << "," << feature.type() << "," << FeatureTypeToStr(feature.type());
-			if(feature.has_id())
-				cout << ",id=" << feature.id();
-			cout << endl;
+			map<string, string> tagMap;
 			for(int tagNum = 0; tagNum < feature.tags_size(); tagNum+=2)
 			{	
-				cout << layer.keys(feature.tags(tagNum)) << "=";
 				const ::vector_tile::Tile_Value &value = layer.values(feature.tags(tagNum+1));
-				cout << ValueToStr(value) << endl;
+				tagMap[layer.keys(feature.tags(tagNum))] = ValueToStr(value);
 			}
-	
+
+			this->output->Feature(feature.type(), feature.has_id(), feature.id(), tagMap);
 			DecodeGeometry(feature, layer.extent(), tileZoom, tileColumn, tileRow);
 		}
 
@@ -252,5 +248,18 @@ void DecodeVectorTileResults::LayerStart(const char *name, int version)
 void DecodeVectorTileResults::LayerEnd()
 {
 	cout << "layer end" << endl;
+}
+
+void DecodeVectorTileResults::Feature(int typeEnum, bool hasId, unsigned long long id, const map<string, string> &tagMap)
+{
+	cout << typeEnum << "," << FeatureTypeToStr((::vector_tile::Tile_GeomType)typeEnum);
+	if(hasId)
+		cout << ",id=" << id;
+	cout << endl;
+
+	for(map<string, string>::const_iterator it = tagMap.begin(); it != tagMap.end(); it++)
+	{
+		cout << it->first << "=" << it->second << endl;
+	}
 }
 
