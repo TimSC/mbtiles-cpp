@@ -83,7 +83,9 @@ inline double CheckWinding(LineLoop2D pts)
 void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 	int extent, int tileZoom, int tileColumn, int tileRow, 
 	vector<Point2D> &pointsOut, 
-	vector<vector<Point2D> > &linesOut)
+	vector<vector<Point2D> > &linesOut,
+	vector<Polygon2D> &polygonsOut)
+	
 {
 	long unsigned int numTiles = pow(2,tileZoom);
 	double lonMin = tilex2long(tileColumn, tileZoom);
@@ -93,12 +95,14 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 	double dLat = latMax - latMin;
 	double dLon = lonMax - lonMin;
 	vector<Point2D> points;
+	Polygon2D currentPolygon;
 	unsigned prevCmdId = 0;
 
 	int cursorx = 0, cursory = 0;
 	double prevx = 0.0, prevy = 0.0;
 	pointsOut.clear();
 	linesOut.clear();
+	polygonsOut.clear();
 
 	for(int i=0; i < feature.geometry_size(); i ++)
 	{
@@ -159,7 +163,7 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 			for(int j=0; j < cmdCount; j++)
 			{
 				//cout << "ClosePath" << endl;
-				//cout << "winding: " << CheckWinding(points) << endl;
+				cout << "winding: " << CheckWinding(points) << endl;
 				points.clear();
 				prevCmdId = cmdId;
 			}
@@ -210,12 +214,13 @@ void DecodeVectorTile::DecodeTileData(const std::string &tileData, int tileZoom,
 			}
 
 			this->output->Feature(feature.type(), feature.has_id(), feature.id(), tagMap);
-			if (feature.type() == ::vector_tile::Tile_GeomType_POINT)
+			if (feature.type() == ::vector_tile::Tile_GeomType_POLYGON)
 			{
 				vector<Point2D> points;
 				vector<vector<Point2D> > lines;
+				vector<Polygon2D> polygons;
 				DecodeGeometry(feature, layer.extent(), tileZoom, tileColumn, tileRow, 
-					points, lines);
+					points, lines, polygons);
 				for(size_t i =0; i < points.size(); i++)
 					cout << "POINT("<<points[i].first<<","<<points[i].second<<") ";
 				for(size_t i =0; i < lines.size(); i++)
@@ -288,7 +293,7 @@ void DecodeVectorTileResults::LayerEnd()
 
 void DecodeVectorTileResults::Feature(int typeEnum, bool hasId, unsigned long long id, const map<string, string> &tagMap)
 {
-	if (typeEnum != ::vector_tile::Tile_GeomType_POINT) return;
+	if (typeEnum != ::vector_tile::Tile_GeomType_POLYGON) return;
 
 	cout << typeEnum << "," << FeatureTypeToStr((::vector_tile::Tile_GeomType)typeEnum);
 	if(hasId)
