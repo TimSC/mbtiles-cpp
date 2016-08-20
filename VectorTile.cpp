@@ -138,6 +138,8 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 		}
 		if(cmdId == 7) //ClosePath
 		{
+			//Closed path does not move cursor in v1 to v2.1 of spec.
+			// https://github.com/mapbox/vector-tile-spec/issues/49
 			for(int j=0; j < cmdCount; j++)
 			{
 				cout << "ClosePath" << endl;
@@ -163,18 +165,16 @@ DecodeVectorTile::~DecodeVectorTile()
 void DecodeVectorTile::DecodeTileData(const std::string &tileData, int tileZoom, int tileColumn, int tileRow)
 {
 	vector_tile::Tile tile;
-	cout << "ParseFromString: " << tile.ParseFromString(tileData) << endl;
-	cout << "Num layers: " << tile.layers_size() << endl;
+	bool parsed = tile.ParseFromString(tileData);
+	if(!parsed)
+		throw runtime_error("Failed to parse tile data");
 	
+	this->output->NumLayers(tile.layers_size());	
+
 	for(int layerNum = 0; layerNum < tile.layers_size(); layerNum++)
 	{
 		const ::vector_tile::Tile_Layer &layer = tile.layers(layerNum);
-		cout << "layer version: " << layer.version() << endl;
-		cout << "layer name: " << layer.name() << endl;
-		cout << "layer extent: " << layer.extent() << endl;
-		cout << "layer keys_size(): " << layer.keys_size() << endl;
-		cout << "layer values_size(): " << layer.values_size() << endl;
-		cout << "layer features_size(): " << layer.features_size() << endl;
+		this->output->LayerStart(layer.name().c_str(), layer.version());
 
 		//The spec says "Decoders SHOULD parse the version first to ensure that 
 		//they are capable of decoding each layer." This has not been implemented.
@@ -197,6 +197,8 @@ void DecodeVectorTile::DecodeTileData(const std::string &tileData, int tileZoom,
 	
 			DecodeGeometry(feature, layer.extent(), tileZoom, tileColumn, tileRow);
 		}
+
+		this->output->LayerEnd();
 	}
 }
 
@@ -224,4 +226,31 @@ double tiley2lat(int y, int z)
 	return 180.0 / M_PI * atan(0.5 * (exp(n) - exp(-n)));
 }
 
+// ***********************************************
+
+DecodeVectorTileResults::DecodeVectorTileResults()
+{
+
+}
+
+DecodeVectorTileResults::~DecodeVectorTileResults()
+{
+
+}
+
+void DecodeVectorTileResults::NumLayers(int numLayers)
+{
+	cout << "Num layers: " << numLayers << endl;
+}
+
+void DecodeVectorTileResults::LayerStart(const char *name, int version)
+{
+	cout << "layer name: " << name << endl;
+	cout << "layer version: " << version << endl;
+}
+
+void DecodeVectorTileResults::LayerEnd()
+{
+	cout << "layer end" << endl;
+}
 
