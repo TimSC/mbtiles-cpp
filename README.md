@@ -1,5 +1,5 @@
 # mbtiles-cpp
-MBTiles reader, vector map pbf v2.0 reader.
+MBTiles reader, vector map pbf v2.0 reader. C++ library for decoding of mbtiles and vector data into function callbacks. Can can be integrated by compiling it inline with your code by adding appropriate files to your project.
 
 The MBTiles spec is at https://github.com/mapbox/mbtiles-spec
 
@@ -12,4 +12,6 @@ MBTiles available at http://osm2vectortiles.org/downloads/ and https://www.mapbo
 This software may be redistributed under the MIT license.
 
 sudo apt-get install libsqlite3-dev g++ libprotobuf-dev zlib1g-dev
+
+make
 
