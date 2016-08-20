@@ -12,6 +12,7 @@ using namespace std;
 #include <string>
 #include <sstream>
 #include <vector>
+#include <utility>
 
 using namespace std;
 
@@ -80,6 +81,19 @@ string ValueToStr(const ::vector_tile::Tile_Value &value)
 	return "Error: Unknown value type";
 }
 
+typedef std::pair<double, double> Point2D;
+inline double CheckWinding(std::vector<Point2D> pts) 
+{
+	double total = 0.0;
+	for(size_t i=0; i < pts.size(); i++)
+	{
+		size_t i2 = (i+1)%pts.size();
+		double val = (pts[i2].first - pts[i].first)*(pts[i2].second + pts[i].second);
+		total += val;
+	}
+	return total;
+}
+
 void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 	int extent, int tileZoom, int tileColumn, int tileRow)
 {
@@ -90,8 +104,12 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 	double latMin = tiley2lat(numTiles-tileRow, tileZoom);
 	double dLat = latMax - latMin;
 	double dLon = lonMax - lonMin;
+	vector<Point2D> points;
+	unsigned prevCmdId = 0;
 
 	int cursorx = 0, cursory = 0;
+	double prevx = 0.0, prevy = 0.0;
+
 	for(int i=0; i < feature.geometry_size(); i ++)
 	{
 		unsigned g = feature.geometry(i);
@@ -110,13 +128,18 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 				double px = dLon * double(cursorx) / double(extent) + lonMin;
 				double py = - dLat * double(cursory) / double(extent) + latMax;
 				cout << "MoveTo " << cursorx << "," << cursory << ",(" << px << "," << py << ")" << endl;
+				prevx = px; 
+				prevy = py;
 				i += 2;
+				prevCmdId = cmdId;
 			}
 		}
 		if(cmdId == 2)//LineTo
 		{
 			for(int j=0; j < cmdCount; j++)
 			{
+				if(prevCmdId != 2)
+					points.push_back(Point2D(prevx, prevy));
 				unsigned v = feature.geometry(i+1);
 				int value1 = ((v >> 1) ^ (-(v & 1)));
 				v = feature.geometry(i+2);
@@ -126,7 +149,9 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 				double px = dLon * double(cursorx) / double(extent) + lonMin;
 				double py = - dLat * double(cursory) / double(extent) + latMax;
 				cout << "LineTo " << cursorx << "," << cursory << ",(" << px << "," << py << ")" << endl;
+				points.push_back(Point2D(px, py));
 				i += 2;
+				prevCmdId = cmdId;
 			}
 		}
 		if(cmdId == 7) //ClosePath
@@ -134,9 +159,12 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 			for(int j=0; j < cmdCount; j++)
 			{
 				cout << "ClosePath" << endl;
+				cout << "winding: " << CheckWinding(points) << endl;
+				points.clear();
+				prevCmdId = cmdId;
 			}
 		}
-
+		
 	}
 }
 
@@ -178,8 +206,8 @@ int main(int argc, char **argv)
 
 	string blob;
 	int tileZoom = 14;
-	int tileColumn = 9618;
-	int tileRow = 9611; //6772 in OSM numbering
+	int tileColumn = 9613;
+	int tileRow = 9626;
 	mbTileReader.GetTile(tileZoom, tileColumn, tileRow, blob);
 
 	if(format == "pbf" && versionInts[0] == 2)
@@ -217,6 +245,8 @@ int main(int argc, char **argv)
 			for(int featureNum = 0; featureNum < layer.features_size(); featureNum++)
 			{
 				const ::vector_tile::Tile_Feature &feature =layer.features(featureNum);
+
+				//if(feature.type() != ::vector_tile::Tile_GeomType_POLYGON) continue;
 				cout << featureNum << "," << feature.type() << "," << FeatureTypeToStr(feature.type());
 				if(feature.has_id())
 					cout << ",id=" << feature.id();
@@ -227,6 +257,8 @@ int main(int argc, char **argv)
 					const ::vector_tile::Tile_Value &value = layer.values(feature.tags(tagNum+1));
 					cout << ValueToStr(value) << endl;
 				}
+		
+				
 				DecodeGeometry(feature, layer.extent(), tileZoom, tileColumn, tileRow);
 			}
 		}

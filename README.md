@@ -7,6 +7,8 @@ Vector tile spec is at https://github.com/mapbox/vector-tile-spec
 
 UTFGrid spec is at https://github.com/mapbox/utfgrid-spec
 
+MBTiles available at http://osm2vectortiles.org/downloads/ and https://www.mapbox.com/
+
 This software may be redistributed under the MIT license.
 
 sudo apt-get install libsqlite3-dev g++ libprotobuf-dev zlib1g-dev
