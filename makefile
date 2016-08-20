@@ -1,2 +1,2 @@
 all:
-	g++ test.cpp -lsqlite3 -o test
+	g++ test.cpp MBTileReader.cpp -lsqlite3 -o test
