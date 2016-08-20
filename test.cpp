@@ -80,6 +80,53 @@ string ValueToStr(const ::vector_tile::Tile_Value &value)
 	return "Error: Unknown value type";
 }
 
+void DecodeGeometry(const ::vector_tile::Tile_Feature &feature)
+{
+	int cursorx = 0, cursory = 0;
+	for(int i=0; i < feature.geometry_size(); i ++)
+	{
+		unsigned g = feature.geometry(i);
+		unsigned cmdId = g & 0x7;
+		unsigned cmdCount = g >> 3;
+		if(cmdId == 1)//MoveTo
+		{
+			for(int j=0; j < cmdCount; j++)
+			{
+				unsigned v = feature.geometry(i+1);
+				int value1 = ((v >> 1) ^ (-(v & 1)));
+				v = feature.geometry(i+2);
+				int value2 = ((v >> 1) ^ (-(v & 1)));
+				cursorx += value1;
+				cursory += value2;
+				cout << "MoveTo " << cursorx << "," << cursory << endl;
+				i += 2;
+			}
+		}
+		if(cmdId == 2)//LineTo
+		{
+			for(int j=0; j < cmdCount; j++)
+			{
+				unsigned v = feature.geometry(i+1);
+				int value1 = ((v >> 1) ^ (-(v & 1)));
+				v = feature.geometry(i+2);
+				int value2 = ((v >> 1) ^ (-(v & 1)));
+				cursorx += value1;
+				cursory += value2;
+				cout << "LineTo " << cursorx << "," << cursory << endl;
+				i += 2;
+			}
+		}
+		if(cmdId == 7) //ClosePath
+		{
+			for(int j=0; j < cmdCount; j++)
+			{
+				cout << "ClosePath" << endl;
+			}
+		}
+
+	}
+}
+
 int main(int argc, char **argv)
 {
 	class MBTileReader mbTileReader("cairo_egypt.mbtiles");	
@@ -161,6 +208,7 @@ int main(int argc, char **argv)
 					const ::vector_tile::Tile_Value &value = layer.values(feature.tags(tagNum+1));
 					cout << ValueToStr(value) << endl;
 				}
+				DecodeGeometry(feature);
 			}
 		}
 
