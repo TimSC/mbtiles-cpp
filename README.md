@@ -1,5 +1,5 @@
 # mbtiles-cpp
-MBTiles reader, vector map pbf v2.0 reader. C++ library for decoding of mbtiles and vector data into function callbacks. Can can be integrated by compiling it inline with your code by adding appropriate files to your project.
+MBTiles reader, vector map pbf v2.0 reader. C++ library for decoding of mbtiles and vector data into function callbacks. It can be integrated by compiling it inline with your code by adding appropriate files to your project.
 
 The MBTiles spec is at https://github.com/mapbox/mbtiles-spec
 
