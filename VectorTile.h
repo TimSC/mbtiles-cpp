@@ -3,6 +3,11 @@
 
 #include <string>
 #include <map>
+#include <vector>
+
+typedef std::pair<double, double> Point2D;
+typedef std::vector<Point2D> LineLoop2D;
+typedef std::pair<LineLoop2D, std::vector<LineLoop2D> > Polygon2D;
 
 ///Derive a class from this to act as storage for the results. This
 ///class only defines the interface.
@@ -16,9 +21,13 @@ public:
 	virtual void LayerStart(const char *name, int version);
 	virtual void LayerEnd();
 	virtual void Feature(int typeEnum, bool hasId, unsigned long long id, 
-		const std::map<std::string, std::string> &tagMap);
+		const std::map<std::string, std::string> &tagMap,
+		std::vector<Point2D> &pointsOut, 
+		std::vector<std::vector<Point2D> > &linesOut,
+		std::vector<Polygon2D> &polygonsOut);
 };
 
+///Main decoding class for vector tiles in pbf format
 class DecodeVectorTile
 {
 public:

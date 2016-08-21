@@ -4,7 +4,6 @@
 #include <math.h>
 #include <iostream>
 #include <sstream>
-#include <vector>
 #include <utility>
 using namespace std;
 
@@ -64,10 +63,6 @@ string ValueToStr(const ::vector_tile::Tile_Value &value)
 	return "Error: Unknown value type";
 }
 
-typedef std::pair<double, double> Point2D;
-typedef std::vector<Point2D> LineLoop2D;
-typedef std::pair<LineLoop2D, std::vector<LineLoop2D> > Polygon2D;
-
 inline double CheckWinding(LineLoop2D pts) 
 {
 	double total = 0.0;
@@ -96,10 +91,11 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 	double dLon = lonMax - lonMin;
 	vector<Point2D> points;
 	Polygon2D currentPolygon;
+	bool currentPolygonSet = false;
 	unsigned prevCmdId = 0;
 
 	int cursorx = 0, cursory = 0;
-	double prevx = 0.0, prevy = 0.0;
+	double prevx = 0.0, prevy = 0.0, prevWinding = -1.0;
 	pointsOut.clear();
 	linesOut.clear();
 	polygonsOut.clear();
@@ -121,7 +117,7 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 				cursory += value2;
 				double px = dLon * double(cursorx) / double(extent) + lonMin;
 				double py = - dLat * double(cursory) / double(extent) + latMax;
-				//cout << "MoveTo " << cursorx << "," << cursory << ",(" << px << "," << py << ")" << endl;
+				
 				if (feature.type() == vector_tile::Tile_GeomType_POINT)
 					pointsOut.push_back(Point2D(px, py));
 				if (feature.type() == vector_tile::Tile_GeomType_LINESTRING && points.size() > 0)
@@ -149,9 +145,8 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 				cursory += value2;
 				double px = dLon * double(cursorx) / double(extent) + lonMin;
 				double py = - dLat * double(cursory) / double(extent) + latMax;
-				//cout << "LineTo " << cursorx << "," << cursory << ",(" << px << "," << py << ")" << endl;
-				if (feature.type() != vector_tile::Tile_GeomType_POINT)
-					points.push_back(Point2D(px, py));
+
+				points.push_back(Point2D(px, py));
 				i += 2;
 				prevCmdId = cmdId;
 			}
@@ -162,17 +157,36 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 			// https://github.com/mapbox/vector-tile-spec/issues/49
 			for(int j=0; j < cmdCount; j++)
 			{
-				//cout << "ClosePath" << endl;
-				cout << "winding: " << CheckWinding(points) << endl;
-				points.clear();
-				prevCmdId = cmdId;
+				if (feature.type() == vector_tile::Tile_GeomType_POLYGON)
+				{
+					double winding = CheckWinding(points);
+					if(winding >= 0.0)
+					{
+						if(currentPolygonSet)
+						{
+							//We are moving on to the next polygon, so store what we have collected so far
+							polygonsOut.push_back(currentPolygon);
+							currentPolygon.first.clear();
+							currentPolygon.second.clear();
+						}
+						currentPolygon.first = points; //outer shape
+						currentPolygonSet = true;
+					}
+					else
+						currentPolygon.second.push_back(points); //inter shape
+					
+					prevWinding = winding;
+					points.clear();
+					prevCmdId = cmdId;
+				}				
 			}
 		}
-		
 	}
 
 	if (feature.type() == vector_tile::Tile_GeomType_LINESTRING)
 		linesOut.push_back(points);
+	if (feature.type() == vector_tile::Tile_GeomType_POLYGON)
+		polygonsOut.push_back(currentPolygon);
 }
 
 DecodeVectorTile::DecodeVectorTile(class DecodeVectorTileResults &output)
@@ -213,26 +227,14 @@ void DecodeVectorTile::DecodeTileData(const std::string &tileData, int tileZoom,
 				tagMap[layer.keys(feature.tags(tagNum))] = ValueToStr(value);
 			}
 
-			this->output->Feature(feature.type(), feature.has_id(), feature.id(), tagMap);
-			if (feature.type() == ::vector_tile::Tile_GeomType_POLYGON)
-			{
-				vector<Point2D> points;
-				vector<vector<Point2D> > lines;
-				vector<Polygon2D> polygons;
-				DecodeGeometry(feature, layer.extent(), tileZoom, tileColumn, tileRow, 
-					points, lines, polygons);
-				for(size_t i =0; i < points.size(); i++)
-					cout << "POINT("<<points[i].first<<","<<points[i].second<<") ";
-				for(size_t i =0; i < lines.size(); i++)
-				{
-					cout << "LINESTRING(";
-					vector<Point2D> &linePts = lines[i];
-					for(size_t j =0; j < linePts.size(); j++)
-						cout << "("<<linePts[i].first<<","<<linePts[i].second<<") ";
-					cout << ") ";
-				}
-				cout << endl;
-			}
+			vector<Point2D> points;
+			vector<vector<Point2D> > lines;
+			vector<Polygon2D> polygons;
+			DecodeGeometry(feature, layer.extent(), tileZoom, tileColumn, tileRow, 
+				points, lines, polygons);
+
+			this->output->Feature(feature.type(), feature.has_id(), feature.id(), tagMap, 
+				points, lines, polygons);
 		}
 
 		this->output->LayerEnd();
@@ -291,10 +293,12 @@ void DecodeVectorTileResults::LayerEnd()
 	cout << "layer end" << endl;
 }
 
-void DecodeVectorTileResults::Feature(int typeEnum, bool hasId, unsigned long long id, const map<string, string> &tagMap)
+void DecodeVectorTileResults::Feature(int typeEnum, bool hasId, 
+	unsigned long long id, const map<string, string> &tagMap,
+	vector<Point2D> &points, 
+	vector<vector<Point2D> > &lines,
+	vector<Polygon2D> &polygons)
 {
-	if (typeEnum != ::vector_tile::Tile_GeomType_POLYGON) return;
-
 	cout << typeEnum << "," << FeatureTypeToStr((::vector_tile::Tile_GeomType)typeEnum);
 	if(hasId)
 		cout << ",id=" << id;
@@ -304,5 +308,42 @@ void DecodeVectorTileResults::Feature(int typeEnum, bool hasId, unsigned long lo
 	{
 		cout << it->first << "=" << it->second << endl;
 	}
+
+	for(size_t i =0; i < points.size(); i++)
+		cout << "POINT("<<points[i].first<<","<<points[i].second<<") ";
+	for(size_t i =0; i < lines.size(); i++)
+	{
+		cout << "LINESTRING(";
+		vector<Point2D> &linePts = lines[i];
+		for(size_t j =0; j < linePts.size(); j++)
+			cout << "("<<linePts[i].first<<","<<linePts[i].second<<") ";
+		cout << ") ";
+	}
+	for(size_t i =0; i < polygons.size(); i++)
+	{
+		Polygon2D &polygon = polygons[i];
+		cout << "POLYGON((";
+		LineLoop2D &linePts = polygon.first; //Outer shape
+		for(size_t j =0; j < linePts.size(); j++)
+			cout << "("<<linePts[j].first<<","<<linePts[j].second<<") ";
+		cout << ")";
+		if(polygon.second.size() > 0)
+		{
+			//Inner shape
+			cout << ",(";
+			for(size_t k =0; k < polygon.second.size(); k++)
+			{
+				cout << "(";
+				LineLoop2D &linePts2 = polygon.second[i];
+				for(size_t j =0; j < linePts2.size(); j++)
+					cout << "("<<linePts2[i].first<<","<<linePts2[i].second<<") ";
+				cout << ") ";
+			}
+			cout << ")";
+		}
+
+		cout << ") ";
+	}
+	cout << endl;
 }
 
