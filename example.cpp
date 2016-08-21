@@ -1,19 +1,14 @@
 #include <iostream>
-#include <sqlite3.h>
-#include <string>
 #include <cstring>
 #include <map>
-#include <sstream>
+#include <fstream>
 #include "ReadGzip.h"
-using namespace std;
 #include "MBTileReader.h"
 #include <math.h>
-#include <string>
-
-#include <vector>
+#include <sstream>
+#include <fstream>
 #include <stdlib.h>
 #include "VectorTile.h"
-
 using namespace std;
 
 // http://stackoverflow.com/a/236803/4288232
@@ -25,8 +20,30 @@ void strsplit(const string &s, char delim, vector<string> &elems) {
     }
 }
 
+///This class would need to be expanded to store features as needed.
+class ExampleDataStore : public DecodeVectorTileResults
+{
+public:
+	ExampleDataStore() : DecodeVectorTileResults()
+	{
+		cout << "Create custom data store..." << endl;
+	}
+
+	void Feature(int typeEnum, bool hasId, unsigned long long id, 
+		const std::map<std::string, std::string> &tagMap,
+		std::vector<Point2D> &pointsOut, 
+		std::vector<std::vector<Point2D> > &linesOut,
+		std::vector<Polygon2D> &polygonsOut)
+	{
+		//In real use, delete this function call and add your own functionality.
+		DecodeVectorTileResults::Feature(typeEnum, hasId, id, 
+			tagMap, pointsOut, linesOut, polygonsOut);
+	}
+};
+
 int main(int argc, char **argv)
 {
+	//Grab from http://osm2vectortiles.org/downloads/
 	class MBTileReader mbTileReader("cairo_egypt.mbtiles");	
 	
 	cout << "name:" << mbTileReader.GetMetadata("name") << endl;
@@ -84,9 +101,19 @@ int main(int argc, char **argv)
 		}
 
 		//Decode vector data
-		class DecodeVectorTileResults results;
+		class ExampleDataStore results;
 		class DecodeVectorTile vectorDec(results);
 		vectorDec.DecodeTileData(tileData, tileZoom, tileColumn, tileRow);
 	}
+	
+	if(format == "jpg" || format == "png")
+	{
+		//Save image to output file
+		stringstream filename;
+		filename << "out" << "." << format;
+		ofstream outFi(filename.str().c_str());
+		outFi.write(blob.c_str(), blob.size());
+	}
+	
 }
 
