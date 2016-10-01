@@ -95,7 +95,7 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 	unsigned prevCmdId = 0;
 
 	int cursorx = 0, cursory = 0;
-	double prevx = 0.0, prevy = 0.0, prevWinding = -1.0;
+	double prevx = 0.0, prevy = 0.0;// prevWinding = -1.0;
 	pointsOut.clear();
 	linesOut.clear();
 	polygonsOut.clear();
@@ -107,7 +107,7 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 		unsigned cmdCount = g >> 3;
 		if(cmdId == 1)//MoveTo
 		{
-			for(int j=0; j < cmdCount; j++)
+			for(unsigned j=0; j < cmdCount; j++)
 			{
 				unsigned v = feature.geometry(i+1);
 				int value1 = ((v >> 1) ^ (-(v & 1)));
@@ -133,7 +133,7 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 		}
 		if(cmdId == 2)//LineTo
 		{
-			for(int j=0; j < cmdCount; j++)
+			for(unsigned j=0; j < cmdCount; j++)
 			{
 				if(prevCmdId != 2)
 					points.push_back(Point2D(prevx, prevy));
@@ -155,7 +155,7 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 		{
 			//Closed path does not move cursor in v1 to v2.1 of spec.
 			// https://github.com/mapbox/vector-tile-spec/issues/49
-			for(int j=0; j < cmdCount; j++)
+			for(unsigned j=0; j < cmdCount; j++)
 			{
 				if (feature.type() == vector_tile::Tile_GeomType_POLYGON)
 				{
@@ -175,7 +175,7 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 					else
 						currentPolygon.second.push_back(points); //inter shape
 					
-					prevWinding = winding;
+					//prevWinding = winding;
 					points.clear();
 					prevCmdId = cmdId;
 				}				

@@ -2,7 +2,7 @@
 #include <cstring>
 #include <map>
 #include <fstream>
-#include "ReadGzip.h"
+#include "cppGzip/DecodeGzip.h"
 #include "MBTileReader.h"
 #include <math.h>
 #include <sstream>
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
 	vector<string> versionSplit;
 	strsplit(version, '.', versionSplit);
 	vector<int> versionInts;
-	for (int i=0;i<versionSplit.size();i++) versionInts.push_back(atoi(versionSplit[i].c_str()));
+	for (size_t i=0;i<versionSplit.size();i++) versionInts.push_back(atoi(versionSplit[i].c_str()));
 	cout << "description:" << mbTileReader.GetMetadata("description") << endl;
 	string format = mbTileReader.GetMetadata("format");
 	cout << "format:" << format << endl;

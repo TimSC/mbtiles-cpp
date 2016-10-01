@@ -96,7 +96,6 @@ void MBTileReader::GetTile(unsigned int zoomLevel,
 	unsigned int tileRow,
 	string &blobOut)
 {
-	char *zErrMsg = NULL;
 	sqlite3_stmt *stmt = NULL;
 	blobOut.clear();
 	int status = sqlite3_prepare(this->db, 

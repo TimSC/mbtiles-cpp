@@ -1,0 +1,3 @@
+[submodule "cppGzip"]
+	path = cppGzip
+	url = https://github.com/TimSC/cppGzip.git
