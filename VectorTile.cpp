@@ -334,9 +334,9 @@ void DecodeVectorTileResults::Feature(int typeEnum, bool hasId,
 			for(size_t k =0; k < polygon.second.size(); k++)
 			{
 				cout << "(";
-				LineLoop2D &linePts2 = polygon.second[i];
+				LineLoop2D &linePts2 = polygon.second[k];
 				for(size_t j =0; j < linePts2.size(); j++)
-					cout << "("<<linePts2[i].first<<","<<linePts2[i].second<<") ";
+					cout << "("<<linePts2[j].first<<","<<linePts2[j].second<<") ";
 				cout << ") ";
 			}
 			cout << ")";
