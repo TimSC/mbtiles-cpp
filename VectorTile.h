@@ -8,7 +8,7 @@
 typedef std::pair<double, double> Point2D;
 typedef std::vector<Point2D> LineLoop2D;
 typedef std::pair<LineLoop2D, std::vector<LineLoop2D> > Polygon2D;
-
+std::string FeatureTypeToStr(int type);
 ///Derive a class from this to act as storage for the results. This
 ///class only defines the interface.
 class DecodeVectorTileResults

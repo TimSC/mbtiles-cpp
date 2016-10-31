@@ -7,8 +7,9 @@
 #include <utility>
 using namespace std;
 
-string FeatureTypeToStr(::vector_tile::Tile_GeomType type)
+string FeatureTypeToStr(int typeIn)
 {
+	::vector_tile::Tile_GeomType type = (::vector_tile::Tile_GeomType)typeIn;
 	if(type == ::vector_tile::Tile_GeomType_UNKNOWN)
 		return "Unknown";
 	if(type == ::vector_tile::Tile_GeomType_POINT)
