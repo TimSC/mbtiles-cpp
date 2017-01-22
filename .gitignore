@@ -1,3 +1,6 @@
 *.mbtiles
 example
+example2
+*.pbf
+*.proto
 

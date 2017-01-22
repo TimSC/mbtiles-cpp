@@ -1,6 +1,5 @@
 #include "VectorTile.h"
 #include <string>
-#include "vector_tile20/vector_tile.pb.h"
 #include <math.h>
 #include <iostream>
 #include <sstream>
@@ -240,6 +239,8 @@ void DecodeVectorTile::DecodeTileData(const std::string &tileData, int tileZoom,
 
 		this->output->LayerEnd();
 	}
+
+	this->output->Finish();
 }
 
 // *********************************************
@@ -346,5 +347,95 @@ void DecodeVectorTileResults::Feature(int typeEnum, bool hasId,
 		cout << ") ";
 	}
 	cout << endl;
+}
+
+void DecodeVectorTileResults::Finish()
+{
+
+}
+// *********************************************************************************
+
+EncodeVectorTile::EncodeVectorTile(int tileZoom, int tileColumn, int tileRow, std::ostream &output): tileZoom(tileZoom), tileColumn(tileColumn), tileRow(tileRow), output(&output), currentLayer(NULL)
+{
+
+}
+
+EncodeVectorTile::~EncodeVectorTile()
+{
+
+}
+
+void EncodeVectorTile::NumLayers(int numLayers)
+{
+
+}
+
+void EncodeVectorTile::LayerStart(const char *name, int version)
+{
+	if (this->currentLayer != NULL)
+		throw runtime_error("Previous layer not closed");
+	this->currentLayer = this->tile.add_layers();
+	this->currentLayer->set_name(name);
+	this->currentLayer->set_version(version);
+}
+
+void EncodeVectorTile::LayerEnd()
+{
+	if (this->currentLayer == NULL)
+		throw runtime_error("Layer not started");
+	this->currentLayer = NULL;
+	this->keysCache.clear();
+	this->valuesCache.clear();
+}
+
+void EncodeVectorTile::Feature(int typeEnum, bool hasId, unsigned long long id, 
+	const std::map<std::string, std::string> &tagMap,
+	std::vector<Point2D> &pointsOut, 
+	std::vector<std::vector<Point2D> > &linesOut,
+	std::vector<Polygon2D> &polygonsOut)
+{
+	if (this->currentLayer == NULL)
+		throw runtime_error("Cannot add feature: layer not started");
+	
+	vector_tile::Tile_Feature* feature = this->currentLayer->add_features();
+	if(hasId)
+		feature->set_id(id);
+	feature->set_type((vector_tile::Tile_GeomType)typeEnum);
+
+	for(std::map<std::string, std::string>::const_iterator it = tagMap.begin(); it != tagMap.end(); it++)
+	{
+		map<std::string, int>::iterator keyChk = this->keysCache.find(it->first);
+		map<std::string, int>::iterator valueChk = this->valuesCache.find(it->second);
+		int keyIndex = -1, valueIndex = -1;
+
+		if(keyChk == this->keysCache.end())
+		{
+			this->currentLayer->add_keys(it->first);
+			keyIndex = this->currentLayer->keys_size()-1;
+			this->keysCache[it->first] = keyIndex;
+		}
+		else
+			keyIndex = keyChk->second;
+
+		if(valueChk == this->valuesCache.end())
+		{
+			vector_tile::Tile_Value *value = this->currentLayer->add_values();
+			value->set_string_value(it->second);
+			valueIndex = this->currentLayer->values_size()-1;
+			this->valuesCache[it->second] = valueIndex;
+		}
+		else
+			valueIndex = valueChk->second;
+
+		feature->add_tags(keyIndex);
+		feature->add_tags(valueIndex);
+	}
+	
+	//TODO encode geometry
+}
+
+void EncodeVectorTile::Finish()
+{
+	this->tile.SerializeToOstream(this->output);
 }
 

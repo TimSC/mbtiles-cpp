@@ -43,6 +43,10 @@ public:
 
 int main(int argc, char **argv)
 {
+	// Verify that the version of the library that we linked against is
+	// compatible with the version of the headers we compiled against.
+	GOOGLE_PROTOBUF_VERIFY_VERSION;
+
 	//Grab from http://osm2vectortiles.org/downloads/
 	class MBTileReader mbTileReader("cairo_egypt.mbtiles");	
 	
@@ -114,6 +118,9 @@ int main(int argc, char **argv)
 		ofstream outFi(filename.str().c_str());
 		outFi.write(blob.c_str(), blob.size());
 	}
+
+	// Optional:  Delete all global objects allocated by libprotobuf.
+	google::protobuf::ShutdownProtobufLibrary();
 	
 }
 

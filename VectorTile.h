@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include "vector_tile20/vector_tile.pb.h"
 
 typedef std::pair<double, double> Point2D;
 typedef std::vector<Point2D> LineLoop2D;
@@ -25,6 +26,7 @@ public:
 		std::vector<Point2D> &pointsOut, 
 		std::vector<std::vector<Point2D> > &linesOut,
 		std::vector<Polygon2D> &polygonsOut);
+	virtual void Finish();
 };
 
 ///Main decoding class for vector tiles in pbf format
@@ -37,6 +39,32 @@ public:
 
 protected:
 	class DecodeVectorTileResults *output;
+};
+
+///Main encoding class for vector tiles in pbf format
+class EncodeVectorTile : public DecodeVectorTileResults
+{
+public:
+	EncodeVectorTile(int tileZoom, int tileColumn, int tileRow, std::ostream &output);
+	virtual ~EncodeVectorTile();
+
+	virtual void NumLayers(int numLayers);
+	virtual void LayerStart(const char *name, int version);
+	virtual void LayerEnd();
+	virtual void Feature(int typeEnum, bool hasId, unsigned long long id, 
+		const std::map<std::string, std::string> &tagMap,
+		std::vector<Point2D> &pointsOut, 
+		std::vector<std::vector<Point2D> > &linesOut,
+		std::vector<Polygon2D> &polygonsOut);
+	virtual void Finish();
+
+protected:
+	int tileZoom, tileColumn, tileRow;
+	std::ostream *output;
+	vector_tile::Tile tile;
+	vector_tile::Tile_Layer *currentLayer;
+	std::map<std::string, int> keysCache;
+	std::map<std::string, int> valuesCache;
 };
 
 int long2tilex(double lon, int z);

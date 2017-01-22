@@ -55,6 +55,10 @@ public:
 
 int main()
 {
+	// Verify that the version of the library that we linked against is
+	// compatible with the version of the headers we compiled against.
+	GOOGLE_PROTOBUF_VERIFY_VERSION;
+
 	std::filebuf fb;
 	std::filebuf* ret = fb.open("map.vector.pbf", std::ios::in | std::ios::binary);
 	if (ret == NULL)
@@ -75,8 +79,20 @@ int main()
 		tileData.append(tmp, bytes);
 	}
 
-	//Decode vector data
+	//Decode vector data to stdout
 	class ExampleDataStore results;
 	class DecodeVectorTile vectorDec(results);
 	vectorDec.DecodeTileData(tileData, 3, 2, 3);
+
+	//Reencode data to file
+	std::ofstream outputFi("mapout.vector.pbf");
+	class EncodeVectorTile vectorEnc(3, 2, 3, outputFi);
+	class DecodeVectorTile vectorDec2(vectorEnc);
+	vectorDec2.DecodeTileData(tileData, 3, 2, 3);
+	fb.close();
+
+	// Optional:  Delete all global objects allocated by libprotobuf.
+	google::protobuf::ShutdownProtobufLibrary();
+
 }
+

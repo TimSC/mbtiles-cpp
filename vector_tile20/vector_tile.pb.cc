@@ -10,30 +10,174 @@
 #include <google/protobuf/stubs/once.h>
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/wire_format_lite_inl.h>
-#include <google/protobuf/io/zero_copy_stream_impl_lite.h>
+#include <google/protobuf/descriptor.h>
+#include <google/protobuf/generated_message_reflection.h>
+#include <google/protobuf/reflection_ops.h>
+#include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 
 namespace vector_tile {
 
-void protobuf_ShutdownFile_vector_5ftile_2eproto() {
-  delete Tile::default_instance_;
-  delete Tile_Value::default_instance_;
-  delete Tile_Feature::default_instance_;
-  delete Tile_Layer::default_instance_;
+namespace {
+
+const ::google::protobuf::Descriptor* Tile_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Tile_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Tile_Value_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Tile_Value_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Tile_Feature_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Tile_Feature_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Tile_Layer_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Tile_Layer_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* Tile_GeomType_descriptor_ = NULL;
+
+}  // namespace
+
+
+void protobuf_AssignDesc_vector_5ftile_2eproto() {
+  protobuf_AddDesc_vector_5ftile_2eproto();
+  const ::google::protobuf::FileDescriptor* file =
+    ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
+      "vector_tile.proto");
+  GOOGLE_CHECK(file != NULL);
+  Tile_descriptor_ = file->message_type(0);
+  static const int Tile_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile, layers_),
+  };
+  Tile_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Tile_descriptor_,
+      Tile::default_instance_,
+      Tile_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile, _unknown_fields_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile, _extensions_),
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Tile));
+  Tile_Value_descriptor_ = Tile_descriptor_->nested_type(0);
+  static const int Tile_Value_offsets_[7] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Value, string_value_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Value, float_value_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Value, double_value_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Value, int_value_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Value, uint_value_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Value, sint_value_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Value, bool_value_),
+  };
+  Tile_Value_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Tile_Value_descriptor_,
+      Tile_Value::default_instance_,
+      Tile_Value_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Value, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Value, _unknown_fields_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Value, _extensions_),
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Tile_Value));
+  Tile_Feature_descriptor_ = Tile_descriptor_->nested_type(1);
+  static const int Tile_Feature_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Feature, id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Feature, tags_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Feature, type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Feature, geometry_),
+  };
+  Tile_Feature_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Tile_Feature_descriptor_,
+      Tile_Feature::default_instance_,
+      Tile_Feature_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Feature, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Feature, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Tile_Feature));
+  Tile_Layer_descriptor_ = Tile_descriptor_->nested_type(2);
+  static const int Tile_Layer_offsets_[6] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Layer, version_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Layer, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Layer, features_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Layer, keys_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Layer, values_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Layer, extent_),
+  };
+  Tile_Layer_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Tile_Layer_descriptor_,
+      Tile_Layer::default_instance_,
+      Tile_Layer_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Layer, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Layer, _unknown_fields_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tile_Layer, _extensions_),
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Tile_Layer));
+  Tile_GeomType_descriptor_ = Tile_descriptor_->enum_type(0);
 }
 
-#ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-void protobuf_AddDesc_vector_5ftile_2eproto_impl() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
+namespace {
 
-#else
+GOOGLE_PROTOBUF_DECLARE_ONCE(protobuf_AssignDescriptors_once_);
+inline void protobuf_AssignDescriptorsOnce() {
+  ::google::protobuf::GoogleOnceInit(&protobuf_AssignDescriptors_once_,
+                 &protobuf_AssignDesc_vector_5ftile_2eproto);
+}
+
+void protobuf_RegisterTypes(const ::std::string&) {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Tile_descriptor_, &Tile::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Tile_Value_descriptor_, &Tile_Value::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Tile_Feature_descriptor_, &Tile_Feature::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Tile_Layer_descriptor_, &Tile_Layer::default_instance());
+}
+
+}  // namespace
+
+void protobuf_ShutdownFile_vector_5ftile_2eproto() {
+  delete Tile::default_instance_;
+  delete Tile_reflection_;
+  delete Tile_Value::default_instance_;
+  delete Tile_Value_reflection_;
+  delete Tile_Feature::default_instance_;
+  delete Tile_Feature_reflection_;
+  delete Tile_Layer::default_instance_;
+  delete Tile_Layer_reflection_;
+}
+
 void protobuf_AddDesc_vector_5ftile_2eproto() {
   static bool already_here = false;
   if (already_here) return;
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#endif
+  ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
+    "\n\021vector_tile.proto\022\013vector_tile\"\300\004\n\004Til"
+    "e\022\'\n\006layers\030\003 \003(\0132\027.vector_tile.Tile.Lay"
+    "er\032\241\001\n\005Value\022\024\n\014string_value\030\001 \001(\t\022\023\n\013fl"
+    "oat_value\030\002 \001(\002\022\024\n\014double_value\030\003 \001(\001\022\021\n"
+    "\tint_value\030\004 \001(\003\022\022\n\nuint_value\030\005 \001(\004\022\022\n\n"
+    "sint_value\030\006 \001(\022\022\022\n\nbool_value\030\007 \001(\010*\010\010\010"
+    "\020\200\200\200\200\002\032s\n\007Feature\022\r\n\002id\030\001 \001(\004:\0010\022\020\n\004tags"
+    "\030\002 \003(\rB\002\020\001\0221\n\004type\030\003 \001(\0162\032.vector_tile.T"
+    "ile.GeomType:\007UNKNOWN\022\024\n\010geometry\030\004 \003(\rB"
+    "\002\020\001\032\255\001\n\005Layer\022\022\n\007version\030\017 \002(\r:\0011\022\014\n\004nam"
+    "e\030\001 \002(\t\022+\n\010features\030\002 \003(\0132\031.vector_tile."
+    "Tile.Feature\022\014\n\004keys\030\003 \003(\t\022\'\n\006values\030\004 \003"
+    "(\0132\027.vector_tile.Tile.Value\022\024\n\006extent\030\005 "
+    "\001(\r:\0044096*\010\010\020\020\200\200\200\200\002\"\?\n\010GeomType\022\013\n\007UNKNO"
+    "WN\020\000\022\t\n\005POINT\020\001\022\016\n\nLINESTRING\020\002\022\013\n\007POLYG"
+    "ON\020\003*\005\010\020\020\200@", 611);
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
+    "vector_tile.proto", &protobuf_RegisterTypes);
   Tile::default_instance_ = new Tile();
   Tile_Value::default_instance_ = new Tile_Value();
   Tile_Feature::default_instance_ = new Tile_Feature();
@@ -45,23 +189,19 @@ void protobuf_AddDesc_vector_5ftile_2eproto() {
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_vector_5ftile_2eproto);
 }
 
-#ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-GOOGLE_PROTOBUF_DECLARE_ONCE(protobuf_AddDesc_vector_5ftile_2eproto_once_);
-void protobuf_AddDesc_vector_5ftile_2eproto() {
-  ::google::protobuf::GoogleOnceInit(&protobuf_AddDesc_vector_5ftile_2eproto_once_,
-                 &protobuf_AddDesc_vector_5ftile_2eproto_impl);
-}
-#else
 // Force AddDescriptors() to be called at static initialization time.
 struct StaticDescriptorInitializer_vector_5ftile_2eproto {
   StaticDescriptorInitializer_vector_5ftile_2eproto() {
     protobuf_AddDesc_vector_5ftile_2eproto();
   }
 } static_descriptor_initializer_vector_5ftile_2eproto_;
-#endif
 
 // ===================================================================
 
+const ::google::protobuf::EnumDescriptor* Tile_GeomType_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Tile_GeomType_descriptor_;
+}
 bool Tile_GeomType_IsValid(int value) {
   switch(value) {
     case 0:
@@ -94,7 +234,7 @@ const int Tile_Value::kBoolValueFieldNumber;
 #endif  // !_MSC_VER
 
 Tile_Value::Tile_Value()
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::Message() {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vector_tile.Tile.Value)
 }
@@ -103,7 +243,7 @@ void Tile_Value::InitAsDefaultInstance() {
 }
 
 Tile_Value::Tile_Value(const Tile_Value& from)
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:vector_tile.Tile.Value)
@@ -131,11 +271,7 @@ void Tile_Value::SharedDtor() {
   if (string_value_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete string_value_;
   }
-  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-  if (this != &default_instance()) {
-  #else
   if (this != default_instance_) {
-  #endif
   }
 }
 
@@ -144,12 +280,13 @@ void Tile_Value::SetCachedSize(int size) const {
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
+const ::google::protobuf::Descriptor* Tile_Value::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Tile_Value_descriptor_;
+}
+
 const Tile_Value& Tile_Value::default_instance() {
-#ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-  protobuf_AddDesc_vector_5ftile_2eproto();
-#else
   if (default_instance_ == NULL) protobuf_AddDesc_vector_5ftile_2eproto();
-#endif
   return *default_instance_;
 }
 
@@ -184,17 +321,13 @@ void Tile_Value::Clear() {
 #undef ZR_
 
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->clear();
+  mutable_unknown_fields()->Clear();
 }
 
 bool Tile_Value::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  ::google::protobuf::io::StringOutputStream unknown_fields_string(
-      mutable_unknown_fields());
-  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
-      &unknown_fields_string);
   // @@protoc_insertion_point(parse_start:vector_tile.Tile.Value)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
@@ -206,6 +339,10 @@ bool Tile_Value::MergePartialFromCodedStream(
         if (tag == 10) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_string_value()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->string_value().data(), this->string_value().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "string_value");
         } else {
           goto handle_unusual;
         }
@@ -311,17 +448,12 @@ bool Tile_Value::MergePartialFromCodedStream(
           goto success;
         }
         if ((64u <= tag)) {
-        #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-          DO_(_extensions_.ParseField(tag, input, &default_instance(),
-                                      &unknown_fields_stream));
-        #else
           DO_(_extensions_.ParseField(tag, input, default_instance_,
-                                      &unknown_fields_stream));
-        #endif
+                                      mutable_unknown_fields()));
           continue;
         }
-        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
-            input, tag, &unknown_fields_stream));
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
         break;
       }
     }
@@ -340,6 +472,10 @@ void Tile_Value::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_start:vector_tile.Tile.Value)
   // optional string string_value = 1;
   if (has_string_value()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->string_value().data(), this->string_value().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "string_value");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->string_value(), output);
   }
@@ -378,9 +514,67 @@ void Tile_Value::SerializeWithCachedSizes(
   _extensions_.SerializeWithCachedSizes(
       8, 536870912, output);
 
-  output->WriteRaw(unknown_fields().data(),
-                   unknown_fields().size());
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
   // @@protoc_insertion_point(serialize_end:vector_tile.Tile.Value)
+}
+
+::google::protobuf::uint8* Tile_Value::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:vector_tile.Tile.Value)
+  // optional string string_value = 1;
+  if (has_string_value()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->string_value().data(), this->string_value().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "string_value");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->string_value(), target);
+  }
+
+  // optional float float_value = 2;
+  if (has_float_value()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->float_value(), target);
+  }
+
+  // optional double double_value = 3;
+  if (has_double_value()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(3, this->double_value(), target);
+  }
+
+  // optional int64 int_value = 4;
+  if (has_int_value()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(4, this->int_value(), target);
+  }
+
+  // optional uint64 uint_value = 5;
+  if (has_uint_value()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(5, this->uint_value(), target);
+  }
+
+  // optional sint64 sint_value = 6;
+  if (has_sint_value()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteSInt64ToArray(6, this->sint_value(), target);
+  }
+
+  // optional bool bool_value = 7;
+  if (has_bool_value()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(7, this->bool_value(), target);
+  }
+
+  // Extension range [8, 536870912)
+  target = _extensions_.SerializeWithCachedSizesToArray(
+      8, 536870912, target);
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:vector_tile.Tile.Value)
+  return target;
 }
 
 int Tile_Value::ByteSize() const {
@@ -433,17 +627,27 @@ int Tile_Value::ByteSize() const {
   }
   total_size += _extensions_.ByteSize();
 
-  total_size += unknown_fields().size();
-
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
   return total_size;
 }
 
-void Tile_Value::CheckTypeAndMergeFrom(
-    const ::google::protobuf::MessageLite& from) {
-  MergeFrom(*::google::protobuf::down_cast<const Tile_Value*>(&from));
+void Tile_Value::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Tile_Value* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Tile_Value*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
 }
 
 void Tile_Value::MergeFrom(const Tile_Value& from) {
@@ -472,7 +676,13 @@ void Tile_Value::MergeFrom(const Tile_Value& from) {
     }
   }
   _extensions_.MergeFrom(from._extensions_);
-  mutable_unknown_fields()->append(from.unknown_fields());
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Tile_Value::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
 }
 
 void Tile_Value::CopyFrom(const Tile_Value& from) {
@@ -497,14 +707,18 @@ void Tile_Value::Swap(Tile_Value* other) {
     std::swap(sint_value_, other->sint_value_);
     std::swap(bool_value_, other->bool_value_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.swap(other->_unknown_fields_);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
     _extensions_.Swap(&other->_extensions_);
   }
 }
 
-::std::string Tile_Value::GetTypeName() const {
-  return "vector_tile.Tile.Value";
+::google::protobuf::Metadata Tile_Value::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Tile_Value_descriptor_;
+  metadata.reflection = Tile_Value_reflection_;
+  return metadata;
 }
 
 
@@ -518,7 +732,7 @@ const int Tile_Feature::kGeometryFieldNumber;
 #endif  // !_MSC_VER
 
 Tile_Feature::Tile_Feature()
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::Message() {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vector_tile.Tile.Feature)
 }
@@ -527,7 +741,7 @@ void Tile_Feature::InitAsDefaultInstance() {
 }
 
 Tile_Feature::Tile_Feature(const Tile_Feature& from)
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:vector_tile.Tile.Feature)
@@ -546,11 +760,7 @@ Tile_Feature::~Tile_Feature() {
 }
 
 void Tile_Feature::SharedDtor() {
-  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-  if (this != &default_instance()) {
-  #else
   if (this != default_instance_) {
-  #endif
   }
 }
 
@@ -559,12 +769,13 @@ void Tile_Feature::SetCachedSize(int size) const {
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
+const ::google::protobuf::Descriptor* Tile_Feature::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Tile_Feature_descriptor_;
+}
+
 const Tile_Feature& Tile_Feature::default_instance() {
-#ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-  protobuf_AddDesc_vector_5ftile_2eproto();
-#else
   if (default_instance_ == NULL) protobuf_AddDesc_vector_5ftile_2eproto();
-#endif
   return *default_instance_;
 }
 
@@ -582,17 +793,13 @@ void Tile_Feature::Clear() {
   tags_.Clear();
   geometry_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->clear();
+  mutable_unknown_fields()->Clear();
 }
 
 bool Tile_Feature::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  ::google::protobuf::io::StringOutputStream unknown_fields_string(
-      mutable_unknown_fields());
-  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
-      &unknown_fields_string);
   // @@protoc_insertion_point(parse_start:vector_tile.Tile.Feature)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
@@ -642,8 +849,7 @@ bool Tile_Feature::MergePartialFromCodedStream(
           if (::vector_tile::Tile_GeomType_IsValid(value)) {
             set_type(static_cast< ::vector_tile::Tile_GeomType >(value));
           } else {
-            unknown_fields_stream.WriteVarint32(tag);
-            unknown_fields_stream.WriteVarint32(value);
+            mutable_unknown_fields()->AddVarint(3, value);
           }
         } else {
           goto handle_unusual;
@@ -677,8 +883,8 @@ bool Tile_Feature::MergePartialFromCodedStream(
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
           goto success;
         }
-        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
-            input, tag, &unknown_fields_stream));
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
         break;
       }
     }
@@ -726,9 +932,61 @@ void Tile_Feature::SerializeWithCachedSizes(
       this->geometry(i), output);
   }
 
-  output->WriteRaw(unknown_fields().data(),
-                   unknown_fields().size());
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
   // @@protoc_insertion_point(serialize_end:vector_tile.Tile.Feature)
+}
+
+::google::protobuf::uint8* Tile_Feature::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:vector_tile.Tile.Feature)
+  // optional uint64 id = 1 [default = 0];
+  if (has_id()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->id(), target);
+  }
+
+  // repeated uint32 tags = 2 [packed = true];
+  if (this->tags_size() > 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
+      2,
+      ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
+      target);
+    target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
+      _tags_cached_byte_size_, target);
+  }
+  for (int i = 0; i < this->tags_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteUInt32NoTagToArray(this->tags(i), target);
+  }
+
+  // optional .vector_tile.Tile.GeomType type = 3 [default = UNKNOWN];
+  if (has_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      3, this->type(), target);
+  }
+
+  // repeated uint32 geometry = 4 [packed = true];
+  if (this->geometry_size() > 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
+      4,
+      ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
+      target);
+    target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
+      _geometry_cached_byte_size_, target);
+  }
+  for (int i = 0; i < this->geometry_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteUInt32NoTagToArray(this->geometry(i), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:vector_tile.Tile.Feature)
+  return target;
 }
 
 int Tile_Feature::ByteSize() const {
@@ -783,17 +1041,27 @@ int Tile_Feature::ByteSize() const {
     total_size += data_size;
   }
 
-  total_size += unknown_fields().size();
-
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
   return total_size;
 }
 
-void Tile_Feature::CheckTypeAndMergeFrom(
-    const ::google::protobuf::MessageLite& from) {
-  MergeFrom(*::google::protobuf::down_cast<const Tile_Feature*>(&from));
+void Tile_Feature::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Tile_Feature* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Tile_Feature*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
 }
 
 void Tile_Feature::MergeFrom(const Tile_Feature& from) {
@@ -808,7 +1076,13 @@ void Tile_Feature::MergeFrom(const Tile_Feature& from) {
       set_type(from.type());
     }
   }
-  mutable_unknown_fields()->append(from.unknown_fields());
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Tile_Feature::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
 }
 
 void Tile_Feature::CopyFrom(const Tile_Feature& from) {
@@ -829,13 +1103,17 @@ void Tile_Feature::Swap(Tile_Feature* other) {
     std::swap(type_, other->type_);
     geometry_.Swap(&other->geometry_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.swap(other->_unknown_fields_);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
   }
 }
 
-::std::string Tile_Feature::GetTypeName() const {
-  return "vector_tile.Tile.Feature";
+::google::protobuf::Metadata Tile_Feature::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Tile_Feature_descriptor_;
+  metadata.reflection = Tile_Feature_reflection_;
+  return metadata;
 }
 
 
@@ -851,7 +1129,7 @@ const int Tile_Layer::kExtentFieldNumber;
 #endif  // !_MSC_VER
 
 Tile_Layer::Tile_Layer()
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::Message() {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vector_tile.Tile.Layer)
 }
@@ -860,7 +1138,7 @@ void Tile_Layer::InitAsDefaultInstance() {
 }
 
 Tile_Layer::Tile_Layer(const Tile_Layer& from)
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:vector_tile.Tile.Layer)
@@ -884,11 +1162,7 @@ void Tile_Layer::SharedDtor() {
   if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete name_;
   }
-  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-  if (this != &default_instance()) {
-  #else
   if (this != default_instance_) {
-  #endif
   }
 }
 
@@ -897,12 +1171,13 @@ void Tile_Layer::SetCachedSize(int size) const {
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
+const ::google::protobuf::Descriptor* Tile_Layer::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Tile_Layer_descriptor_;
+}
+
 const Tile_Layer& Tile_Layer::default_instance() {
-#ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-  protobuf_AddDesc_vector_5ftile_2eproto();
-#else
   if (default_instance_ == NULL) protobuf_AddDesc_vector_5ftile_2eproto();
-#endif
   return *default_instance_;
 }
 
@@ -927,17 +1202,13 @@ void Tile_Layer::Clear() {
   keys_.Clear();
   values_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->clear();
+  mutable_unknown_fields()->Clear();
 }
 
 bool Tile_Layer::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  ::google::protobuf::io::StringOutputStream unknown_fields_string(
-      mutable_unknown_fields());
-  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
-      &unknown_fields_string);
   // @@protoc_insertion_point(parse_start:vector_tile.Tile.Layer)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
@@ -949,6 +1220,10 @@ bool Tile_Layer::MergePartialFromCodedStream(
         if (tag == 10) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->name().data(), this->name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "name");
         } else {
           goto handle_unusual;
         }
@@ -976,6 +1251,11 @@ bool Tile_Layer::MergePartialFromCodedStream(
          parse_keys:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->add_keys()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->keys(this->keys_size() - 1).data(),
+            this->keys(this->keys_size() - 1).length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "keys");
         } else {
           goto handle_unusual;
         }
@@ -1036,17 +1316,12 @@ bool Tile_Layer::MergePartialFromCodedStream(
           goto success;
         }
         if ((128u <= tag)) {
-        #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-          DO_(_extensions_.ParseField(tag, input, &default_instance(),
-                                      &unknown_fields_stream));
-        #else
           DO_(_extensions_.ParseField(tag, input, default_instance_,
-                                      &unknown_fields_stream));
-        #endif
+                                      mutable_unknown_fields()));
           continue;
         }
-        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
-            input, tag, &unknown_fields_stream));
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
         break;
       }
     }
@@ -1065,25 +1340,33 @@ void Tile_Layer::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_start:vector_tile.Tile.Layer)
   // required string name = 1;
   if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->name(), output);
   }
 
   // repeated .vector_tile.Tile.Feature features = 2;
   for (int i = 0; i < this->features_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessage(
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->features(i), output);
   }
 
   // repeated string keys = 3;
   for (int i = 0; i < this->keys_size(); i++) {
+  ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    this->keys(i).data(), this->keys(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE,
+    "keys");
     ::google::protobuf::internal::WireFormatLite::WriteString(
       3, this->keys(i), output);
   }
 
   // repeated .vector_tile.Tile.Value values = 4;
   for (int i = 0; i < this->values_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessage(
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       4, this->values(i), output);
   }
 
@@ -1101,9 +1384,71 @@ void Tile_Layer::SerializeWithCachedSizes(
   _extensions_.SerializeWithCachedSizes(
       16, 536870912, output);
 
-  output->WriteRaw(unknown_fields().data(),
-                   unknown_fields().size());
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
   // @@protoc_insertion_point(serialize_end:vector_tile.Tile.Layer)
+}
+
+::google::protobuf::uint8* Tile_Layer::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:vector_tile.Tile.Layer)
+  // required string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->name(), target);
+  }
+
+  // repeated .vector_tile.Tile.Feature features = 2;
+  for (int i = 0; i < this->features_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->features(i), target);
+  }
+
+  // repeated string keys = 3;
+  for (int i = 0; i < this->keys_size(); i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->keys(i).data(), this->keys(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "keys");
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(3, this->keys(i), target);
+  }
+
+  // repeated .vector_tile.Tile.Value values = 4;
+  for (int i = 0; i < this->values_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        4, this->values(i), target);
+  }
+
+  // optional uint32 extent = 5 [default = 4096];
+  if (has_extent()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(5, this->extent(), target);
+  }
+
+  // required uint32 version = 15 [default = 1];
+  if (has_version()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(15, this->version(), target);
+  }
+
+  // Extension range [16, 536870912)
+  target = _extensions_.SerializeWithCachedSizesToArray(
+      16, 536870912, target);
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:vector_tile.Tile.Layer)
+  return target;
 }
 
 int Tile_Layer::ByteSize() const {
@@ -1157,17 +1502,27 @@ int Tile_Layer::ByteSize() const {
 
   total_size += _extensions_.ByteSize();
 
-  total_size += unknown_fields().size();
-
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
   return total_size;
 }
 
-void Tile_Layer::CheckTypeAndMergeFrom(
-    const ::google::protobuf::MessageLite& from) {
-  MergeFrom(*::google::protobuf::down_cast<const Tile_Layer*>(&from));
+void Tile_Layer::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Tile_Layer* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Tile_Layer*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
 }
 
 void Tile_Layer::MergeFrom(const Tile_Layer& from) {
@@ -1187,7 +1542,13 @@ void Tile_Layer::MergeFrom(const Tile_Layer& from) {
     }
   }
   _extensions_.MergeFrom(from._extensions_);
-  mutable_unknown_fields()->append(from.unknown_fields());
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Tile_Layer::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
 }
 
 void Tile_Layer::CopyFrom(const Tile_Layer& from) {
@@ -1213,14 +1574,18 @@ void Tile_Layer::Swap(Tile_Layer* other) {
     values_.Swap(&other->values_);
     std::swap(extent_, other->extent_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.swap(other->_unknown_fields_);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
     _extensions_.Swap(&other->_extensions_);
   }
 }
 
-::std::string Tile_Layer::GetTypeName() const {
-  return "vector_tile.Tile.Layer";
+::google::protobuf::Metadata Tile_Layer::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Tile_Layer_descriptor_;
+  metadata.reflection = Tile_Layer_reflection_;
+  return metadata;
 }
 
 
@@ -1231,7 +1596,7 @@ const int Tile::kLayersFieldNumber;
 #endif  // !_MSC_VER
 
 Tile::Tile()
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::Message() {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vector_tile.Tile)
 }
@@ -1240,7 +1605,7 @@ void Tile::InitAsDefaultInstance() {
 }
 
 Tile::Tile(const Tile& from)
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:vector_tile.Tile)
@@ -1257,11 +1622,7 @@ Tile::~Tile() {
 }
 
 void Tile::SharedDtor() {
-  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-  if (this != &default_instance()) {
-  #else
   if (this != default_instance_) {
-  #endif
   }
 }
 
@@ -1270,12 +1631,13 @@ void Tile::SetCachedSize(int size) const {
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
+const ::google::protobuf::Descriptor* Tile::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Tile_descriptor_;
+}
+
 const Tile& Tile::default_instance() {
-#ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-  protobuf_AddDesc_vector_5ftile_2eproto();
-#else
   if (default_instance_ == NULL) protobuf_AddDesc_vector_5ftile_2eproto();
-#endif
   return *default_instance_;
 }
 
@@ -1289,17 +1651,13 @@ void Tile::Clear() {
   _extensions_.Clear();
   layers_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->clear();
+  mutable_unknown_fields()->Clear();
 }
 
 bool Tile::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  ::google::protobuf::io::StringOutputStream unknown_fields_string(
-      mutable_unknown_fields());
-  ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
-      &unknown_fields_string);
   // @@protoc_insertion_point(parse_start:vector_tile.Tile)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
@@ -1328,17 +1686,12 @@ bool Tile::MergePartialFromCodedStream(
           goto success;
         }
         if ((128u <= tag && tag < 65536u)) {
-        #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-          DO_(_extensions_.ParseField(tag, input, &default_instance(),
-                                      &unknown_fields_stream));
-        #else
           DO_(_extensions_.ParseField(tag, input, default_instance_,
-                                      &unknown_fields_stream));
-        #endif
+                                      mutable_unknown_fields()));
           continue;
         }
-        DO_(::google::protobuf::internal::WireFormatLite::SkipField(
-            input, tag, &unknown_fields_stream));
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
         break;
       }
     }
@@ -1357,7 +1710,7 @@ void Tile::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_start:vector_tile.Tile)
   // repeated .vector_tile.Tile.Layer layers = 3;
   for (int i = 0; i < this->layers_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessage(
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->layers(i), output);
   }
 
@@ -1365,9 +1718,33 @@ void Tile::SerializeWithCachedSizes(
   _extensions_.SerializeWithCachedSizes(
       16, 8192, output);
 
-  output->WriteRaw(unknown_fields().data(),
-                   unknown_fields().size());
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
   // @@protoc_insertion_point(serialize_end:vector_tile.Tile)
+}
+
+::google::protobuf::uint8* Tile::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:vector_tile.Tile)
+  // repeated .vector_tile.Tile.Layer layers = 3;
+  for (int i = 0; i < this->layers_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        3, this->layers(i), target);
+  }
+
+  // Extension range [16, 8192)
+  target = _extensions_.SerializeWithCachedSizesToArray(
+      16, 8192, target);
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:vector_tile.Tile)
+  return target;
 }
 
 int Tile::ByteSize() const {
@@ -1383,24 +1760,40 @@ int Tile::ByteSize() const {
 
   total_size += _extensions_.ByteSize();
 
-  total_size += unknown_fields().size();
-
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
   return total_size;
 }
 
-void Tile::CheckTypeAndMergeFrom(
-    const ::google::protobuf::MessageLite& from) {
-  MergeFrom(*::google::protobuf::down_cast<const Tile*>(&from));
+void Tile::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Tile* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Tile*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
 }
 
 void Tile::MergeFrom(const Tile& from) {
   GOOGLE_CHECK_NE(&from, this);
   layers_.MergeFrom(from.layers_);
   _extensions_.MergeFrom(from._extensions_);
-  mutable_unknown_fields()->append(from.unknown_fields());
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Tile::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
 }
 
 void Tile::CopyFrom(const Tile& from) {
@@ -1420,14 +1813,18 @@ void Tile::Swap(Tile* other) {
   if (other != this) {
     layers_.Swap(&other->layers_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.swap(other->_unknown_fields_);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
     _extensions_.Swap(&other->_extensions_);
   }
 }
 
-::std::string Tile::GetTypeName() const {
-  return "vector_tile.Tile";
+::google::protobuf::Metadata Tile::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Tile_descriptor_;
+  metadata.reflection = Tile_reflection_;
+  return metadata;
 }
 
 

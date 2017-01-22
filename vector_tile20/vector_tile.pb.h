@@ -20,9 +20,11 @@
 #endif
 
 #include <google/protobuf/generated_message_util.h>
-#include <google/protobuf/message_lite.h>
+#include <google/protobuf/message.h>
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
+#include <google/protobuf/generated_enum_reflection.h>
+#include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 
 namespace vector_tile {
@@ -48,9 +50,19 @@ const Tile_GeomType Tile_GeomType_GeomType_MIN = Tile_GeomType_UNKNOWN;
 const Tile_GeomType Tile_GeomType_GeomType_MAX = Tile_GeomType_POLYGON;
 const int Tile_GeomType_GeomType_ARRAYSIZE = Tile_GeomType_GeomType_MAX + 1;
 
+const ::google::protobuf::EnumDescriptor* Tile_GeomType_descriptor();
+inline const ::std::string& Tile_GeomType_Name(Tile_GeomType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    Tile_GeomType_descriptor(), value);
+}
+inline bool Tile_GeomType_Parse(
+    const ::std::string& name, Tile_GeomType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<Tile_GeomType>(
+    Tile_GeomType_descriptor(), name, value);
+}
 // ===================================================================
 
-class Tile_Value : public ::google::protobuf::MessageLite {
+class Tile_Value : public ::google::protobuf::Message {
  public:
   Tile_Value();
   virtual ~Tile_Value();
@@ -62,32 +74,24 @@ class Tile_Value : public ::google::protobuf::MessageLite {
     return *this;
   }
 
-  inline const ::std::string& unknown_fields() const {
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
     return _unknown_fields_;
   }
 
-  inline ::std::string* mutable_unknown_fields() {
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
     return &_unknown_fields_;
   }
 
+  static const ::google::protobuf::Descriptor* descriptor();
   static const Tile_Value& default_instance();
-
-  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-  // Returns the internal default instance pointer. This function can
-  // return NULL thus should not be used by the user. This is intended
-  // for Protobuf internal code. Please use default_instance() declared
-  // above instead.
-  static inline const Tile_Value* internal_default_instance() {
-    return default_instance_;
-  }
-  #endif
 
   void Swap(Tile_Value* other);
 
   // implements Message ----------------------------------------------
 
   Tile_Value* New() const;
-  void CheckTypeAndMergeFrom(const ::google::protobuf::MessageLite& from);
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
   void CopyFrom(const Tile_Value& from);
   void MergeFrom(const Tile_Value& from);
   void Clear();
@@ -98,14 +102,14 @@ class Tile_Value : public ::google::protobuf::MessageLite {
       ::google::protobuf::io::CodedInputStream* input);
   void SerializeWithCachedSizes(
       ::google::protobuf::io::CodedOutputStream* output) const;
-  void DiscardUnknownFields();
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const;
   public:
-  ::std::string GetTypeName() const;
+  ::google::protobuf::Metadata GetMetadata() const;
 
   // nested types ----------------------------------------------------
 
@@ -185,7 +189,7 @@ class Tile_Value : public ::google::protobuf::MessageLite {
 
   ::google::protobuf::internal::ExtensionSet _extensions_;
 
-  ::std::string _unknown_fields_;
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
@@ -196,11 +200,7 @@ class Tile_Value : public ::google::protobuf::MessageLite {
   bool bool_value_;
   ::google::protobuf::uint64 uint_value_;
   ::google::protobuf::int64 sint_value_;
-  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-  friend void  protobuf_AddDesc_vector_5ftile_2eproto_impl();
-  #else
   friend void  protobuf_AddDesc_vector_5ftile_2eproto();
-  #endif
   friend void protobuf_AssignDesc_vector_5ftile_2eproto();
   friend void protobuf_ShutdownFile_vector_5ftile_2eproto();
 
@@ -209,7 +209,7 @@ class Tile_Value : public ::google::protobuf::MessageLite {
 };
 // -------------------------------------------------------------------
 
-class Tile_Feature : public ::google::protobuf::MessageLite {
+class Tile_Feature : public ::google::protobuf::Message {
  public:
   Tile_Feature();
   virtual ~Tile_Feature();
@@ -221,32 +221,24 @@ class Tile_Feature : public ::google::protobuf::MessageLite {
     return *this;
   }
 
-  inline const ::std::string& unknown_fields() const {
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
     return _unknown_fields_;
   }
 
-  inline ::std::string* mutable_unknown_fields() {
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
     return &_unknown_fields_;
   }
 
+  static const ::google::protobuf::Descriptor* descriptor();
   static const Tile_Feature& default_instance();
-
-  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-  // Returns the internal default instance pointer. This function can
-  // return NULL thus should not be used by the user. This is intended
-  // for Protobuf internal code. Please use default_instance() declared
-  // above instead.
-  static inline const Tile_Feature* internal_default_instance() {
-    return default_instance_;
-  }
-  #endif
 
   void Swap(Tile_Feature* other);
 
   // implements Message ----------------------------------------------
 
   Tile_Feature* New() const;
-  void CheckTypeAndMergeFrom(const ::google::protobuf::MessageLite& from);
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
   void CopyFrom(const Tile_Feature& from);
   void MergeFrom(const Tile_Feature& from);
   void Clear();
@@ -257,14 +249,14 @@ class Tile_Feature : public ::google::protobuf::MessageLite {
       ::google::protobuf::io::CodedInputStream* input);
   void SerializeWithCachedSizes(
       ::google::protobuf::io::CodedOutputStream* output) const;
-  void DiscardUnknownFields();
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const;
   public:
-  ::std::string GetTypeName() const;
+  ::google::protobuf::Metadata GetMetadata() const;
 
   // nested types ----------------------------------------------------
 
@@ -315,7 +307,7 @@ class Tile_Feature : public ::google::protobuf::MessageLite {
   inline void set_has_type();
   inline void clear_has_type();
 
-  ::std::string _unknown_fields_;
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
@@ -325,11 +317,7 @@ class Tile_Feature : public ::google::protobuf::MessageLite {
   ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > geometry_;
   mutable int _geometry_cached_byte_size_;
   int type_;
-  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-  friend void  protobuf_AddDesc_vector_5ftile_2eproto_impl();
-  #else
   friend void  protobuf_AddDesc_vector_5ftile_2eproto();
-  #endif
   friend void protobuf_AssignDesc_vector_5ftile_2eproto();
   friend void protobuf_ShutdownFile_vector_5ftile_2eproto();
 
@@ -338,7 +326,7 @@ class Tile_Feature : public ::google::protobuf::MessageLite {
 };
 // -------------------------------------------------------------------
 
-class Tile_Layer : public ::google::protobuf::MessageLite {
+class Tile_Layer : public ::google::protobuf::Message {
  public:
   Tile_Layer();
   virtual ~Tile_Layer();
@@ -350,32 +338,24 @@ class Tile_Layer : public ::google::protobuf::MessageLite {
     return *this;
   }
 
-  inline const ::std::string& unknown_fields() const {
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
     return _unknown_fields_;
   }
 
-  inline ::std::string* mutable_unknown_fields() {
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
     return &_unknown_fields_;
   }
 
+  static const ::google::protobuf::Descriptor* descriptor();
   static const Tile_Layer& default_instance();
-
-  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-  // Returns the internal default instance pointer. This function can
-  // return NULL thus should not be used by the user. This is intended
-  // for Protobuf internal code. Please use default_instance() declared
-  // above instead.
-  static inline const Tile_Layer* internal_default_instance() {
-    return default_instance_;
-  }
-  #endif
 
   void Swap(Tile_Layer* other);
 
   // implements Message ----------------------------------------------
 
   Tile_Layer* New() const;
-  void CheckTypeAndMergeFrom(const ::google::protobuf::MessageLite& from);
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
   void CopyFrom(const Tile_Layer& from);
   void MergeFrom(const Tile_Layer& from);
   void Clear();
@@ -386,14 +366,14 @@ class Tile_Layer : public ::google::protobuf::MessageLite {
       ::google::protobuf::io::CodedInputStream* input);
   void SerializeWithCachedSizes(
       ::google::protobuf::io::CodedOutputStream* output) const;
-  void DiscardUnknownFields();
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const;
   public:
-  ::std::string GetTypeName() const;
+  ::google::protobuf::Metadata GetMetadata() const;
 
   // nested types ----------------------------------------------------
 
@@ -477,7 +457,7 @@ class Tile_Layer : public ::google::protobuf::MessageLite {
 
   ::google::protobuf::internal::ExtensionSet _extensions_;
 
-  ::std::string _unknown_fields_;
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
@@ -487,11 +467,7 @@ class Tile_Layer : public ::google::protobuf::MessageLite {
   ::google::protobuf::uint32 extent_;
   ::google::protobuf::RepeatedPtrField< ::std::string> keys_;
   ::google::protobuf::RepeatedPtrField< ::vector_tile::Tile_Value > values_;
-  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-  friend void  protobuf_AddDesc_vector_5ftile_2eproto_impl();
-  #else
   friend void  protobuf_AddDesc_vector_5ftile_2eproto();
-  #endif
   friend void protobuf_AssignDesc_vector_5ftile_2eproto();
   friend void protobuf_ShutdownFile_vector_5ftile_2eproto();
 
@@ -500,7 +476,7 @@ class Tile_Layer : public ::google::protobuf::MessageLite {
 };
 // -------------------------------------------------------------------
 
-class Tile : public ::google::protobuf::MessageLite {
+class Tile : public ::google::protobuf::Message {
  public:
   Tile();
   virtual ~Tile();
@@ -512,32 +488,24 @@ class Tile : public ::google::protobuf::MessageLite {
     return *this;
   }
 
-  inline const ::std::string& unknown_fields() const {
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
     return _unknown_fields_;
   }
 
-  inline ::std::string* mutable_unknown_fields() {
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
     return &_unknown_fields_;
   }
 
+  static const ::google::protobuf::Descriptor* descriptor();
   static const Tile& default_instance();
-
-  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-  // Returns the internal default instance pointer. This function can
-  // return NULL thus should not be used by the user. This is intended
-  // for Protobuf internal code. Please use default_instance() declared
-  // above instead.
-  static inline const Tile* internal_default_instance() {
-    return default_instance_;
-  }
-  #endif
 
   void Swap(Tile* other);
 
   // implements Message ----------------------------------------------
 
   Tile* New() const;
-  void CheckTypeAndMergeFrom(const ::google::protobuf::MessageLite& from);
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
   void CopyFrom(const Tile& from);
   void MergeFrom(const Tile& from);
   void Clear();
@@ -548,14 +516,14 @@ class Tile : public ::google::protobuf::MessageLite {
       ::google::protobuf::io::CodedInputStream* input);
   void SerializeWithCachedSizes(
       ::google::protobuf::io::CodedOutputStream* output) const;
-  void DiscardUnknownFields();
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const;
   public:
-  ::std::string GetTypeName() const;
+  ::google::protobuf::Metadata GetMetadata() const;
 
   // nested types ----------------------------------------------------
 
@@ -577,6 +545,17 @@ class Tile : public ::google::protobuf::MessageLite {
     Tile_GeomType_GeomType_MAX;
   static const int GeomType_ARRAYSIZE =
     Tile_GeomType_GeomType_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  GeomType_descriptor() {
+    return Tile_GeomType_descriptor();
+  }
+  static inline const ::std::string& GeomType_Name(GeomType value) {
+    return Tile_GeomType_Name(value);
+  }
+  static inline bool GeomType_Parse(const ::std::string& name,
+      GeomType* value) {
+    return Tile_GeomType_Parse(name, value);
+  }
 
   // accessors -------------------------------------------------------
 
@@ -598,16 +577,12 @@ class Tile : public ::google::protobuf::MessageLite {
 
   ::google::protobuf::internal::ExtensionSet _extensions_;
 
-  ::std::string _unknown_fields_;
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::google::protobuf::RepeatedPtrField< ::vector_tile::Tile_Layer > layers_;
-  #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
-  friend void  protobuf_AddDesc_vector_5ftile_2eproto_impl();
-  #else
   friend void  protobuf_AddDesc_vector_5ftile_2eproto();
-  #endif
   friend void protobuf_AssignDesc_vector_5ftile_2eproto();
   friend void protobuf_ShutdownFile_vector_5ftile_2eproto();
 
@@ -1234,6 +1209,20 @@ Tile::mutable_layers() {
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace vector_tile
+
+#ifndef SWIG
+namespace google {
+namespace protobuf {
+
+template <> struct is_proto_enum< ::vector_tile::Tile_GeomType> : ::google::protobuf::internal::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::vector_tile::Tile_GeomType>() {
+  return ::vector_tile::Tile_GeomType_descriptor();
+}
+
+}  // namespace google
+}  // namespace protobuf
+#endif  // SWIG
 
 // @@protoc_insertion_point(global_scope)
 
