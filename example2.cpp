@@ -3,6 +3,7 @@
 #include <map>
 #include <fstream>
 #include "cppGzip/DecodeGzip.h"
+#include "cppGzip/EncodeGzip.h"
 #include <math.h>
 #include <sstream>
 #include <fstream>
@@ -69,9 +70,7 @@ int main()
 
 	//Ungzip the data
 	DecodeGzip dec(fb);
-
 	string tileData;
-
 	char tmp[1024];
 	while(dec.in_avail())
 	{
@@ -86,10 +85,21 @@ int main()
 	vectorDec.DecodeTileData(tileData);
 
 	//Reencode data to file
-	std::ofstream outputFi("mapout.vector.pbf");
-	class EncodeVectorTile vectorEnc(3, 2, 3, outputFi);
+	std::stringstream binData; //("mapout.vector.pbf");
+	class EncodeVectorTile vectorEnc(3, 2, 3, binData);
 	class DecodeVectorTile vectorDec2(3, 2, 3, vectorEnc);
 	vectorDec2.DecodeTileData(tileData);
+	std::string uncompData = binData.str();
+
+	//Compress with gzip
+	std::filebuf fb2;
+	std::filebuf* ret2 = fb2.open("mapout.vector.pbf", std::ios::out | std::ios::binary);
+	if (ret2 == NULL)
+		cout << "Error opening output file" << endl;
+	EncodeGzip *enc = new EncodeGzip(fb2, Z_DEFAULT_COMPRESSION);
+	enc->sputn(uncompData.c_str(), uncompData.length());
+	delete enc;
+	fb2.close();
 
 	// Optional:  Delete all global objects allocated by libprotobuf.
 	google::protobuf::ShutdownProtobufLibrary();
