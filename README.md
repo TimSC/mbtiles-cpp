@@ -15,3 +15,11 @@ sudo apt-get install libsqlite3-dev g++ libprotobuf-dev zlib1g-dev
 
 make
 
+Useful?
+=======
+
+To update the protobuf files, remove the line "optimize_for = LITE_RUNTIME;" from vector_tile.proto, then
+
+  protoc vector_tile.proto --cpp_out vector_tile20
+
+
