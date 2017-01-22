@@ -81,14 +81,14 @@ int main()
 
 	//Decode vector data to stdout
 	class ExampleDataStore results;
-	class DecodeVectorTile vectorDec(results);
-	vectorDec.DecodeTileData(tileData, 3, 2, 3);
+	class DecodeVectorTile vectorDec(3, 2, 3, results);
+	vectorDec.DecodeTileData(tileData);
 
 	//Reencode data to file
 	std::ofstream outputFi("mapout.vector.pbf");
 	class EncodeVectorTile vectorEnc(3, 2, 3, outputFi);
-	class DecodeVectorTile vectorDec2(vectorEnc);
-	vectorDec2.DecodeTileData(tileData, 3, 2, 3);
+	class DecodeVectorTile vectorDec2(3, 2, 3, vectorEnc);
+	vectorDec2.DecodeTileData(tileData);
 	fb.close();
 
 	// Optional:  Delete all global objects allocated by libprotobuf.

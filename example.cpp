@@ -106,8 +106,8 @@ int main(int argc, char **argv)
 
 		//Decode vector data
 		class ExampleDataStore results;
-		class DecodeVectorTile vectorDec(results);
-		vectorDec.DecodeTileData(tileData, tileZoom, tileColumn, tileRow);
+		class DecodeVectorTile vectorDec(tileZoom, tileColumn, tileRow, results);
+		vectorDec.DecodeTileData(tileData);
 	}
 	
 	if(format == "jpg" || format == "png")

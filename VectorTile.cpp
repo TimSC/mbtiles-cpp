@@ -75,20 +75,75 @@ inline double CheckWinding(LineLoop2D pts)
 	return total;
 }
 
-void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
-	int extent, int tileZoom, int tileColumn, int tileRow, 
+// **************************************************************
+
+DecodeVectorTile::DecodeVectorTile(int tileZoom, int tileColumn, int tileRow, class DecodeVectorTileResults &output)
+{
+	this->output = &output;
+	this->numTiles = pow(2,tileZoom);
+	this->lonMin = tilex2long(tileColumn, tileZoom);
+	this->latMax = tiley2lat(numTiles-tileRow-1, tileZoom);
+	this->lonMax = tilex2long(tileColumn+1, tileZoom);
+	this->latMin = tiley2lat(numTiles-tileRow, tileZoom);
+	this->dLat = latMax - latMin;
+	this->dLon = lonMax - lonMin;
+}
+
+DecodeVectorTile::~DecodeVectorTile()
+{
+
+}
+
+void DecodeVectorTile::DecodeTileData(const std::string &tileData)
+{
+	vector_tile::Tile tile;
+	bool parsed = tile.ParseFromString(tileData);
+	if(!parsed)
+		throw runtime_error("Failed to parse tile data");
+	
+	this->output->NumLayers(tile.layers_size());	
+
+	for(int layerNum = 0; layerNum < tile.layers_size(); layerNum++)
+	{
+		const ::vector_tile::Tile_Layer &layer = tile.layers(layerNum);
+		this->output->LayerStart(layer.name().c_str(), layer.version());
+
+		//The spec says "Decoders SHOULD parse the version first to ensure that 
+		//they are capable of decoding each layer." This has not been implemented.
+
+		for(int featureNum = 0; featureNum < layer.features_size(); featureNum++)
+		{
+			const ::vector_tile::Tile_Feature &feature = layer.features(featureNum);
+
+			map<string, string> tagMap;
+			for(int tagNum = 0; tagNum < feature.tags_size(); tagNum+=2)
+			{	
+				const ::vector_tile::Tile_Value &value = layer.values(feature.tags(tagNum+1));
+				tagMap[layer.keys(feature.tags(tagNum))] = ValueToStr(value);
+			}
+
+			vector<Point2D> points;
+			vector<vector<Point2D> > lines;
+			vector<Polygon2D> polygons;
+			this->DecodeGeometry(feature, layer.extent(),
+				points, lines, polygons);
+
+			this->output->Feature(feature.type(), feature.has_id(), feature.id(), tagMap, 
+				points, lines, polygons);
+		}
+
+		this->output->LayerEnd();
+	}
+
+	this->output->Finish();
+}
+
+void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
+	int extent,
 	vector<Point2D> &pointsOut, 
 	vector<vector<Point2D> > &linesOut,
-	vector<Polygon2D> &polygonsOut)
-	
+	vector<Polygon2D> &polygonsOut)	
 {
-	long unsigned int numTiles = pow(2,tileZoom);
-	double lonMin = tilex2long(tileColumn, tileZoom);
-	double latMax = tiley2lat(numTiles-tileRow-1, tileZoom);//Why is latitude no where near expected?
-	double lonMax = tilex2long(tileColumn+1, tileZoom);
-	double latMin = tiley2lat(numTiles-tileRow, tileZoom);
-	double dLat = latMax - latMin;
-	double dLon = lonMax - lonMin;
 	vector<Point2D> points;
 	Polygon2D currentPolygon;
 	bool currentPolygonSet = false;
@@ -189,59 +244,6 @@ void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
 		polygonsOut.push_back(currentPolygon);
 }
 
-DecodeVectorTile::DecodeVectorTile(class DecodeVectorTileResults &output)
-{
-	this->output = &output;
-}
-
-DecodeVectorTile::~DecodeVectorTile()
-{
-
-}
-
-void DecodeVectorTile::DecodeTileData(const std::string &tileData, int tileZoom, int tileColumn, int tileRow)
-{
-	vector_tile::Tile tile;
-	bool parsed = tile.ParseFromString(tileData);
-	if(!parsed)
-		throw runtime_error("Failed to parse tile data");
-	
-	this->output->NumLayers(tile.layers_size());	
-
-	for(int layerNum = 0; layerNum < tile.layers_size(); layerNum++)
-	{
-		const ::vector_tile::Tile_Layer &layer = tile.layers(layerNum);
-		this->output->LayerStart(layer.name().c_str(), layer.version());
-
-		//The spec says "Decoders SHOULD parse the version first to ensure that 
-		//they are capable of decoding each layer." This has not been implemented.
-
-		for(int featureNum = 0; featureNum < layer.features_size(); featureNum++)
-		{
-			const ::vector_tile::Tile_Feature &feature = layer.features(featureNum);
-
-			map<string, string> tagMap;
-			for(int tagNum = 0; tagNum < feature.tags_size(); tagNum+=2)
-			{	
-				const ::vector_tile::Tile_Value &value = layer.values(feature.tags(tagNum+1));
-				tagMap[layer.keys(feature.tags(tagNum))] = ValueToStr(value);
-			}
-
-			vector<Point2D> points;
-			vector<vector<Point2D> > lines;
-			vector<Polygon2D> polygons;
-			DecodeGeometry(feature, layer.extent(), tileZoom, tileColumn, tileRow, 
-				points, lines, polygons);
-
-			this->output->Feature(feature.type(), feature.has_id(), feature.id(), tagMap, 
-				points, lines, polygons);
-		}
-
-		this->output->LayerEnd();
-	}
-
-	this->output->Finish();
-}
 
 // *********************************************
 

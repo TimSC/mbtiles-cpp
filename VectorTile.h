@@ -33,12 +33,20 @@ public:
 class DecodeVectorTile
 {
 public:
-	DecodeVectorTile(class DecodeVectorTileResults &output);
+	DecodeVectorTile(int tileZoom, int tileColumn, int tileRow, class DecodeVectorTileResults &output);
 	virtual ~DecodeVectorTile();
-	void DecodeTileData(const std::string &data, int tileZoom, int tileColumn, int tileRow);
+	void DecodeTileData(const std::string &data);
 
 protected:
 	class DecodeVectorTileResults *output;
+	long unsigned int numTiles;
+	double lonMin, latMax, lonMax, latMin, dLat, dLon;
+
+	void DecodeGeometry(const ::vector_tile::Tile_Feature &feature,
+		int extent,
+		std::vector<Point2D> &pointsOut, 
+		std::vector<std::vector<Point2D> > &linesOut,
+		std::vector<Polygon2D> &polygonsOut);
 };
 
 ///Main encoding class for vector tiles in pbf format
