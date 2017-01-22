@@ -78,6 +78,7 @@ int main()
 		streamsize bytes = dec.sgetn(tmp, 1024);
 		tileData.append(tmp, bytes);
 	}
+	fb.close();
 
 	//Decode vector data to stdout
 	class ExampleDataStore results;
@@ -89,7 +90,6 @@ int main()
 	class EncodeVectorTile vectorEnc(3, 2, 3, outputFi);
 	class DecodeVectorTile vectorDec2(3, 2, 3, vectorEnc);
 	vectorDec2.DecodeTileData(tileData);
-	fb.close();
 
 	// Optional:  Delete all global objects allocated by libprotobuf.
 	google::protobuf::ShutdownProtobufLibrary();
