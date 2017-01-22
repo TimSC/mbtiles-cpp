@@ -56,7 +56,12 @@ public:
 int main()
 {
 	std::filebuf fb;
-	fb.open("map.vector.pbf", std::ios::in | std::ios::binary);
+	std::filebuf* ret = fb.open("map.vector.pbf", std::ios::in | std::ios::binary);
+	if (ret == NULL)
+	{
+		cout << "Error opening input file" << endl;
+		exit(0);
+	}
 
 	//Ungzip the data
 	DecodeGzip dec(fb);
