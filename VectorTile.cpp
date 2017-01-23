@@ -487,7 +487,18 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 
 			outFeature->add_geometry(value1enc);
 			outFeature->add_geometry(value2enc);
+			cursorx = cxi;
+			cursory = cyi;
 		}
 	}
+
+	if(type == vector_tile::Tile_GeomType_LINESTRING)
+	{
+	}
+
+	if(type == vector_tile::Tile_GeomType_POLYGON)
+	{
+	}
+
 }
 
