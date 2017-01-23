@@ -19,7 +19,7 @@ public:
 	virtual ~DecodeVectorTileResults();
 
 	virtual void NumLayers(int numLayers);
-	virtual void LayerStart(const char *name, int version);
+	virtual void LayerStart(const char *name, int version, int extent);
 	virtual void LayerEnd();
 	virtual void Feature(int typeEnum, bool hasId, unsigned long long id, 
 		const std::map<std::string, std::string> &tagMap,
@@ -57,22 +57,33 @@ public:
 	virtual ~EncodeVectorTile();
 
 	virtual void NumLayers(int numLayers);
-	virtual void LayerStart(const char *name, int version);
+	virtual void LayerStart(const char *name, int version, int extent);
 	virtual void LayerEnd();
 	virtual void Feature(int typeEnum, bool hasId, unsigned long long id, 
 		const std::map<std::string, std::string> &tagMap,
-		std::vector<Point2D> &pointsOut, 
-		std::vector<std::vector<Point2D> > &linesOut,
-		std::vector<Polygon2D> &polygonsOut);
+		std::vector<Point2D> &points, 
+		std::vector<std::vector<Point2D> > &lines,
+		std::vector<Polygon2D> &polygons);
 	virtual void Finish();
 
 protected:
 	int tileZoom, tileColumn, tileRow;
+	long unsigned int numTiles;
+	double lonMin, latMax, lonMax, latMin, dLat, dLon;
+
 	std::ostream *output;
 	vector_tile::Tile tile;
 	vector_tile::Tile_Layer *currentLayer;
 	std::map<std::string, int> keysCache;
 	std::map<std::string, int> valuesCache;
+
+	void EncodeGeometry(vector_tile::Tile_GeomType type,
+		int extent,
+		const std::vector<Point2D> &points, 
+		const std::vector<std::vector<Point2D> > &lines,
+		const std::vector<Polygon2D> &polygons,
+		vector_tile::Tile_Feature *outFeature);
+
 };
 
 int long2tilex(double lon, int z);

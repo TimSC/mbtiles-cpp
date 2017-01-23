@@ -54,14 +54,21 @@ public:
 	}
 };
 
-int main()
+int main(int argc, char *argv[])
 {
 	// Verify that the version of the library that we linked against is
 	// compatible with the version of the headers we compiled against.
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
 
+	std::string finaIn = "map.vector.pbf";
+	if (argc >= 2)
+		finaIn = argv[1];
+	std::string finaOut = "mapout.vector.pbf";
+	if (argc >= 3)
+		finaOut = argv[2];
+
 	std::filebuf fb;
-	std::filebuf* ret = fb.open("map.vector.pbf", std::ios::in | std::ios::binary);
+	std::filebuf* ret = fb.open(finaIn.c_str(), std::ios::in | std::ios::binary);
 	if (ret == NULL)
 	{
 		cout << "Error opening input file" << endl;
@@ -85,7 +92,7 @@ int main()
 	vectorDec.DecodeTileData(tileData);
 
 	//Reencode data to file
-	std::stringstream binData; //("mapout.vector.pbf");
+	std::stringstream binData;
 	class EncodeVectorTile vectorEnc(3, 2, 3, binData);
 	class DecodeVectorTile vectorDec2(3, 2, 3, vectorEnc);
 	vectorDec2.DecodeTileData(tileData);
@@ -93,12 +100,12 @@ int main()
 
 	//Compress with gzip
 	std::filebuf fb2;
-	std::filebuf* ret2 = fb2.open("mapout.vector.pbf", std::ios::out | std::ios::binary);
+	std::filebuf* ret2 = fb2.open(finaOut.c_str(), std::ios::out | std::ios::binary);
 	if (ret2 == NULL)
 		cout << "Error opening output file" << endl;
 	EncodeGzip *enc = new EncodeGzip(fb2, Z_DEFAULT_COMPRESSION);
 	enc->sputn(uncompData.c_str(), uncompData.length());
-	delete enc;
+	delete enc; //Needed to complete the gzip file
 	fb2.close();
 
 	// Optional:  Delete all global objects allocated by libprotobuf.

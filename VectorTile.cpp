@@ -85,8 +85,8 @@ DecodeVectorTile::DecodeVectorTile(int tileZoom, int tileColumn, int tileRow, cl
 	this->latMax = tiley2lat(numTiles-tileRow-1, tileZoom);
 	this->lonMax = tilex2long(tileColumn+1, tileZoom);
 	this->latMin = tiley2lat(numTiles-tileRow, tileZoom);
-	this->dLat = latMax - latMin;
-	this->dLon = lonMax - lonMin;
+	this->dLat = this->latMax - this->latMin;
+	this->dLon = this->lonMax - this->lonMin;
 }
 
 DecodeVectorTile::~DecodeVectorTile()
@@ -106,7 +106,7 @@ void DecodeVectorTile::DecodeTileData(const std::string &tileData)
 	for(int layerNum = 0; layerNum < tile.layers_size(); layerNum++)
 	{
 		const ::vector_tile::Tile_Layer &layer = tile.layers(layerNum);
-		this->output->LayerStart(layer.name().c_str(), layer.version());
+		this->output->LayerStart(layer.name().c_str(), layer.version(), layer.extent());
 
 		//The spec says "Decoders SHOULD parse the version first to ensure that 
 		//they are capable of decoding each layer." This has not been implemented.
@@ -150,7 +150,7 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 	unsigned prevCmdId = 0;
 
 	int cursorx = 0, cursory = 0;
-	double prevx = 0.0, prevy = 0.0;// prevWinding = -1.0;
+	double prevx = 0.0, prevy = 0.0;
 	pointsOut.clear();
 	linesOut.clear();
 	polygonsOut.clear();
@@ -170,8 +170,8 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 				int value2 = ((v >> 1) ^ (-(v & 1)));
 				cursorx += value1;
 				cursory += value2;
-				double px = dLon * double(cursorx) / double(extent) + lonMin;
-				double py = - dLat * double(cursory) / double(extent) + latMax;
+				double px = this->dLon * double(cursorx) / double(extent) + this->lonMin;
+				double py = - this->dLat * double(cursory) / double(extent) + this->latMax;
 				
 				if (feature.type() == vector_tile::Tile_GeomType_POINT)
 					pointsOut.push_back(Point2D(px, py));
@@ -198,8 +198,8 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 				int value2 = ((v >> 1) ^ (-(v & 1)));
 				cursorx += value1;
 				cursory += value2;
-				double px = dLon * double(cursorx) / double(extent) + lonMin;
-				double py = - dLat * double(cursory) / double(extent) + latMax;
+				double px = this->dLon * double(cursorx) / double(extent) + this->lonMin;
+				double py = - this->dLat * double(cursory) / double(extent) + this->latMax;
 
 				points.push_back(Point2D(px, py));
 				i += 2;
@@ -244,7 +244,6 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 		polygonsOut.push_back(currentPolygon);
 }
 
-
 // *********************************************
 
 // https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#C.2FC.2B.2B
@@ -286,7 +285,7 @@ void DecodeVectorTileResults::NumLayers(int numLayers)
 	cout << "Num layers: " << numLayers << endl;
 }
 
-void DecodeVectorTileResults::LayerStart(const char *name, int version)
+void DecodeVectorTileResults::LayerStart(const char *name, int version, int extent)
 {
 	cout << "layer name: " << name << endl;
 	cout << "layer version: " << version << endl;
@@ -359,7 +358,13 @@ void DecodeVectorTileResults::Finish()
 
 EncodeVectorTile::EncodeVectorTile(int tileZoom, int tileColumn, int tileRow, std::ostream &output): tileZoom(tileZoom), tileColumn(tileColumn), tileRow(tileRow), output(&output), currentLayer(NULL)
 {
-
+	this->numTiles = pow(2,tileZoom);
+	this->lonMin = tilex2long(tileColumn, tileZoom);
+	this->latMax = tiley2lat(numTiles-tileRow-1, tileZoom);
+	this->lonMax = tilex2long(tileColumn+1, tileZoom);
+	this->latMin = tiley2lat(numTiles-tileRow, tileZoom);
+	this->dLat = this->latMax - this->latMin;
+	this->dLon = this->lonMax - this->lonMin;
 }
 
 EncodeVectorTile::~EncodeVectorTile()
@@ -372,13 +377,14 @@ void EncodeVectorTile::NumLayers(int numLayers)
 
 }
 
-void EncodeVectorTile::LayerStart(const char *name, int version)
+void EncodeVectorTile::LayerStart(const char *name, int version, int extent)
 {
 	if (this->currentLayer != NULL)
 		throw runtime_error("Previous layer not closed");
 	this->currentLayer = this->tile.add_layers();
 	this->currentLayer->set_name(name);
 	this->currentLayer->set_version(version);
+	this->currentLayer->set_extent(extent);
 }
 
 void EncodeVectorTile::LayerEnd()
@@ -392,9 +398,9 @@ void EncodeVectorTile::LayerEnd()
 
 void EncodeVectorTile::Feature(int typeEnum, bool hasId, unsigned long long id, 
 	const std::map<std::string, std::string> &tagMap,
-	std::vector<Point2D> &pointsOut, 
-	std::vector<std::vector<Point2D> > &linesOut,
-	std::vector<Polygon2D> &polygonsOut)
+	std::vector<Point2D> &points, 
+	std::vector<std::vector<Point2D> > &lines,
+	std::vector<Polygon2D> &polygons)
 {
 	if (this->currentLayer == NULL)
 		throw runtime_error("Cannot add feature: layer not started");
@@ -402,7 +408,6 @@ void EncodeVectorTile::Feature(int typeEnum, bool hasId, unsigned long long id,
 	vector_tile::Tile_Feature* feature = this->currentLayer->add_features();
 	if(hasId)
 		feature->set_id(id);
-	feature->set_type((vector_tile::Tile_GeomType)typeEnum);
 
 	for(std::map<std::string, std::string>::const_iterator it = tagMap.begin(); it != tagMap.end(); it++)
 	{
@@ -433,11 +438,55 @@ void EncodeVectorTile::Feature(int typeEnum, bool hasId, unsigned long long id,
 		feature->add_tags(valueIndex);
 	}
 	
-	//TODO encode geometry
+	//Encode geometry
+	this->EncodeGeometry((vector_tile::Tile_GeomType)typeEnum,
+		this->currentLayer->extent(),
+		points, 
+		lines,
+		polygons, 
+		feature);
+	
 }
 
 void EncodeVectorTile::Finish()
 {
 	this->tile.SerializeToOstream(this->output);
+}
+
+void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type, 
+	int extent,
+	const vector<Point2D> &points, 
+	const vector<vector<Point2D> > &lines,
+	const vector<Polygon2D> &polygons,
+	vector_tile::Tile_Feature *outFeature)
+{
+	if(outFeature == NULL)
+		throw runtime_error("Unexpected null pointer");
+	int cursorx = 0, cursory = 0;
+	//double prevx = 0.0, prevy = 0.0;
+	outFeature->set_type(type);
+
+	if(type == vector_tile::Tile_GeomType_POINT)
+	{
+		uint32_t cmdId = 1;
+		uint32_t cmdCount = points.size();
+		uint32_t cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
+		outFeature->add_geometry(cmdIdCount);
+
+		for(size_t i=0;i < points.size(); i++)
+		{
+			double cx = (points[i].first - this->lonMin) * double(extent) / double(this->dLon);
+			double cy = (points[i].second - this->latMax) * double(extent) / double(this->dLat);
+			int cxi = (int)(cx+0.5); //Round cx and cy
+			int cyi = (int)(cy+0.5);
+			int32_t value1 = cxi - cursorx;
+			int32_t value2 = cyi - cursory;
+			uint32_t value1enc = (value1 << 1) ^ (value1 >> 31);
+			uint32_t value2enc = (value2 << 1) ^ (value2 >> 31);
+
+			outFeature->add_geometry(value1enc);
+			outFeature->add_geometry(value2enc);
+		}
+	}
 }
 
