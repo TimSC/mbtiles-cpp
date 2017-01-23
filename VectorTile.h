@@ -77,6 +77,8 @@ protected:
 	std::map<std::string, int> keysCache;
 	std::map<std::string, int> valuesCache;
 
+	void EncodePoints(const std::vector<Point2D> &points, size_t startIndex, 
+		int extent, int &cursorx, int &cursory, vector_tile::Tile_Feature *outFeature);
 	void EncodeGeometry(vector_tile::Tile_GeomType type,
 		int extent,
 		const std::vector<Point2D> &points, 
