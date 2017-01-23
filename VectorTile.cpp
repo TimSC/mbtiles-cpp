@@ -171,7 +171,7 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 				cursorx += value1;
 				cursory += value2;
 				double px = this->dLon * double(cursorx) / double(extent) + this->lonMin;
-				double py = - this->dLat * double(cursory) / double(extent) + this->latMax;
+				double py = - this->dLat * double(cursory) / double(extent) + this->latMax + this->dLat;
 				
 				if (feature.type() == vector_tile::Tile_GeomType_POINT)
 					pointsOut.push_back(Point2D(px, py));
@@ -476,7 +476,8 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 		for(size_t i=0;i < points.size(); i++)
 		{
 			double cx = (points[i].first - this->lonMin) * double(extent) / double(this->dLon);
-			double cy = (points[i].second - this->latMax) * double(extent) / double(this->dLat);
+			double cy = (points[i].second - this->latMax - this->dLat) * double(extent) / (-this->dLat);
+
 			int cxi = (int)(cx+0.5); //Round cx and cy
 			int cyi = (int)(cy+0.5);
 			int32_t value1 = cxi - cursorx;
