@@ -532,6 +532,7 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 			if (polygon.first.size() < 3) continue;
 
 			//TODO: Check winding of outer polygon
+			cout << "outer winding " << CheckWinding(polygon.first) << endl;
 			
 			//Move to start of outer polygon
 			uint32_t cmdId = 1;
@@ -558,11 +559,11 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 			outFeature->add_geometry(cmdIdCount);
 
 			//Inner polygons
-			for(size_t j=0;j < polygons.size(); j++)
+			for(size_t j=0;j < polygon.second.size(); j++)
 			{
 				//TODO
-				const std::vector<LineLoop2D> &inner = polygon.second;
-				cout << "inner shape!" << endl;
+				const LineLoop2D &inner = polygon.second[j];
+				cout << "inner winding " << CheckWinding(inner) << endl;
 			}			
 		}
 	}
