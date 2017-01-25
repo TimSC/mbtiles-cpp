@@ -545,8 +545,8 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 		for(size_t i=0;i < polygons.size(); i++)
 		{
 			const Polygon2D &polygon = polygons[i];
-			if (polygon.first.size() < 3) continue;
-			bool reverseOuter = CheckWinding(polygon.first) < 0.0;
+			if (polygon.first.size() < 2) continue;
+			bool reverseOuter = CheckWinding(polygon.first) < 0.0; //TODO check winding in tile space
 			
 			//Move to start of outer polygon
 			uint32_t cmdId = 1;
@@ -579,8 +579,8 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 			for(size_t j=0;j < polygon.second.size(); j++)
 			{
 				const LineLoop2D &inner = polygon.second[j];
-				if(inner.size() < 3) continue;
-				bool reverseInner = CheckWinding(inner) > 0.0;
+				if(inner.size() < 2) continue;
+				bool reverseInner = CheckWinding(inner) > 0.0; //TODO check winding in tile space
 
 				//Move to start of inner polygon
 				uint32_t cmdId = 1;
