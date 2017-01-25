@@ -318,7 +318,7 @@ void DecodeVectorTileResults::Feature(int typeEnum, bool hasId,
 		cout << "LINESTRING(";
 		vector<Point2D> &linePts = lines[i];
 		for(size_t j =0; j < linePts.size(); j++)
-			cout << "("<<linePts[i].first<<","<<linePts[i].second<<") ";
+			cout << "("<<linePts[j].first<<","<<linePts[j].second<<") ";
 		cout << ") ";
 	}
 	for(size_t i =0; i < polygons.size(); i++)
