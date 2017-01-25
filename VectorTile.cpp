@@ -75,6 +75,14 @@ inline double CheckWinding(LineLoop2D pts)
 	return -total;
 }
 
+void CheckCmdId(uint32_t cmdIdCount, int cmdId, size_t count)
+{
+	int cmdId2 = cmdIdCount & 0x7;
+	size_t cmdCount2 = cmdIdCount >> 3;
+	if (cmdId != cmdId2 || count != cmdCount2)
+		throw overflow_error("Failed to encode command (probably due to number of points)");
+}
+
 // **************************************************************
 
 DecodeVectorTile::DecodeVectorTile(int tileZoom, int tileColumn, int tileRow, class DecodeVectorTileResults &output)
@@ -509,6 +517,7 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 		uint32_t cmdId = 1;
 		uint32_t cmdCount = points.size();
 		uint32_t cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
+		CheckCmdId(cmdIdCount, 1, cmdCount);
 		outFeature->add_geometry(cmdIdCount);
 
 		EncodePoints(points, false, 0, extent, cursorx, cursory, outFeature);
@@ -535,6 +544,7 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 			cmdId = 2;
 			cmdCount = line.size()-1;
 			cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
+			CheckCmdId(cmdIdCount, 2, line.size()-1);
 			outFeature->add_geometry(cmdIdCount);
 
 			EncodePoints(line, false, 1, extent, cursorx, cursory, outFeature);
@@ -567,6 +577,7 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 			cmdId = 2;
 			cmdCount = polygon.first.size()-1;
 			cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
+			CheckCmdId(cmdIdCount, 2, polygon.first.size()-1);
 			outFeature->add_geometry(cmdIdCount);
 
 			EncodePoints(polygon.first, reverseOuter, 1, extent, cursorx, cursory, outFeature);
@@ -602,6 +613,7 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 				cmdId = 2;
 				cmdCount = inner.size()-1;
 				cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
+				CheckCmdId(cmdIdCount, 2, inner.size()-1);
 				outFeature->add_geometry(cmdIdCount);
 
 				EncodePoints(inner, reverseInner, 1, extent, cursorx, cursory, outFeature);
