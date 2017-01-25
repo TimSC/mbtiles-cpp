@@ -87,6 +87,8 @@ protected:
 		const std::vector<std::vector<Point2D> > &lines,
 		const std::vector<Polygon2D> &polygons,
 		vector_tile::Tile_Feature *outFeature);
+	void ConvertToTileCoords(const LineLoop2D &pts, 
+		int extent, LineLoop2D &out);
 };
 
 int long2tilex(double lon, int z);

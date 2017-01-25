@@ -72,7 +72,7 @@ inline double CheckWinding(LineLoop2D pts)
 		double val = (pts[i2].first - pts[i].first)*(pts[i2].second + pts[i].second);
 		total += val;
 	}
-	return total;
+	return -total;
 }
 
 // **************************************************************
@@ -224,7 +224,7 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 				if (feature.type() == vector_tile::Tile_GeomType_POLYGON)
 				{
 					double winding = CheckWinding(pointsTileSpace);
-					if(winding <= 0.0)
+					if(winding >= 0.0)
 					{
 						if(currentPolygonSet)
 						{
@@ -502,6 +502,7 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 	int cursorx = 0, cursory = 0;
 	//double prevx = 0.0, prevy = 0.0;
 	outFeature->set_type(type);
+	LineLoop2D tmpTileSpace;
 
 	if(type == vector_tile::Tile_GeomType_POINT)
 	{
@@ -546,7 +547,8 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 		{
 			const Polygon2D &polygon = polygons[i];
 			if (polygon.first.size() < 2) continue;
-			bool reverseOuter = CheckWinding(polygon.first) < 0.0; //TODO check winding in tile space
+			this->ConvertToTileCoords(polygon.first, extent, tmpTileSpace);
+			bool reverseOuter = CheckWinding(tmpTileSpace) < 0.0;
 			
 			//Move to start of outer polygon
 			uint32_t cmdId = 1;
@@ -580,7 +582,8 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 			{
 				const LineLoop2D &inner = polygon.second[j];
 				if(inner.size() < 2) continue;
-				bool reverseInner = CheckWinding(inner) > 0.0; //TODO check winding in tile space
+				this->ConvertToTileCoords(inner, extent, tmpTileSpace);
+				bool reverseInner = CheckWinding(tmpTileSpace) >= 0.0;
 
 				//Move to start of inner polygon
 				uint32_t cmdId = 1;
@@ -613,5 +616,16 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 		}
 	}
 
+}
+
+void EncodeVectorTile::ConvertToTileCoords(const LineLoop2D &points, int extent, LineLoop2D &out)
+{
+	out.clear();
+	for(size_t i = 0;i < points.size(); i++)
+	{
+		double cx = (points[i].first - this->lonMin) * double(extent) / double(this->dLon);
+		double cy = (points[i].second - this->latMax - this->dLat) * double(extent) / (-this->dLat);
+		out.push_back(Point2D(cx, cy));
+	}
 }
 
