@@ -476,8 +476,8 @@ void EncodeVectorTile::EncodePoints(const vector<Point2D> &points,
 		double cx = (points[i2].first - this->lonMin) * double(extent) / double(this->dLon);
 		double cy = (points[i2].second - this->latMax - this->dLat) * double(extent) / (-this->dLat);
 
-		int cxi = (int)(cx+0.5); //Round cx and cy
-		int cyi = (int)(cy+0.5);
+		int cxi = (int)round(cx); //Round cx and cy (remember cx and cy might be negative!)
+		int cyi = (int)round(cy);
 		int32_t value1 = cxi - cursorx;
 		int32_t value2 = cyi - cursory;
 		uint32_t value1enc = (value1 << 1) ^ (value1 >> 31);
