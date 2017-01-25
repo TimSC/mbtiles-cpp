@@ -199,7 +199,7 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 				cursorx += value1;
 				cursory += value2;
 				double px = this->dLon * double(cursorx) / double(extent) + this->lonMin;
-				double py = - this->dLat * double(cursory) / double(extent) + this->latMax;
+				double py = - this->dLat * double(cursory) / double(extent) + this->latMax + this->dLat;
 
 				points.push_back(Point2D(px, py));
 				i += 2;
