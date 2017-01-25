@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 #include <vector>
-#include "vector_tile20/vector_tile.pb.h"
+#include "vector_tile21/vector_tile.pb.h"
 
 typedef std::pair<double, double> Point2D;
 typedef std::vector<Point2D> LineLoop2D;
