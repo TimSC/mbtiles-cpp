@@ -87,7 +87,6 @@ protected:
 		const std::vector<std::vector<Point2D> > &lines,
 		const std::vector<Polygon2D> &polygons,
 		vector_tile::Tile_Feature *outFeature);
-
 };
 
 int long2tilex(double lon, int z);

@@ -145,12 +145,14 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 	vector<Polygon2D> &polygonsOut)	
 {
 	vector<Point2D> points;
+	vector<Point2D> pointsTileSpace;
 	Polygon2D currentPolygon;
 	bool currentPolygonSet = false;
 	unsigned prevCmdId = 0;
 
 	int cursorx = 0, cursory = 0;
-	double prevx = 0.0, prevy = 0.0;
+	double prevx = 0.0, prevy = 0.0; //Lat lon
+	double prevxTileSpace = 0.0, prevyTileSpace = 0.0;
 	pointsOut.clear();
 	linesOut.clear();
 	polygonsOut.clear();
@@ -179,9 +181,12 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 				{
 					linesOut.push_back(points);
 					points.clear();
+					pointsTileSpace.clear();
 				}
 				prevx = px; 
 				prevy = py;
+				prevxTileSpace = cursorx;
+				prevyTileSpace = cursory;
 				i += 2;
 				prevCmdId = cmdId;
 			}
@@ -191,7 +196,10 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 			for(unsigned j=0; j < cmdCount; j++)
 			{
 				if(prevCmdId != 2)
+				{
 					points.push_back(Point2D(prevx, prevy));
+					pointsTileSpace.push_back(Point2D(prevxTileSpace, prevyTileSpace));
+				}
 				unsigned v = feature.geometry(i+1);
 				int value1 = ((v >> 1) ^ (-(v & 1)));
 				v = feature.geometry(i+2);
@@ -202,6 +210,7 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 				double py = - this->dLat * double(cursory) / double(extent) + this->latMax + this->dLat;
 
 				points.push_back(Point2D(px, py));
+				pointsTileSpace.push_back(Point2D(cursorx, cursory));
 				i += 2;
 				prevCmdId = cmdId;
 			}
@@ -214,8 +223,8 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 			{
 				if (feature.type() == vector_tile::Tile_GeomType_POLYGON)
 				{
-					double winding = CheckWinding(points);
-					if(winding >= 0.0)
+					double winding = CheckWinding(pointsTileSpace);
+					if(winding <= 0.0)
 					{
 						if(currentPolygonSet)
 						{
@@ -231,6 +240,7 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 						currentPolygon.second.push_back(points); //inter shape
 					
 					points.clear();
+					pointsTileSpace.clear();
 					prevCmdId = cmdId;
 				}				
 			}
