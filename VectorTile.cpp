@@ -471,10 +471,15 @@ void EncodeVectorTile::Finish()
 }
 
 void EncodeVectorTile::EncodePoints(const vector<Point2D> &points, 
+	int cmdId,
 	bool reverseOrder,
 	size_t startIndex, 
 	int extent, int &cursorx, int &cursory, vector_tile::Tile_Feature *outFeature)
 {
+	size_t cmdIdCountIndex = outFeature->geometry_size();
+	outFeature->add_geometry(0); //Placeholder for command
+	size_t cmdCount = 0;
+
 	for(size_t i = startIndex;i < points.size(); i++)
 	{
 		size_t i2 = i;
@@ -488,14 +493,24 @@ void EncodeVectorTile::EncodePoints(const vector<Point2D> &points,
 		int cyi = (int)round(cy);
 		int32_t value1 = cxi - cursorx;
 		int32_t value2 = cyi - cursory;
-		uint32_t value1enc = (value1 << 1) ^ (value1 >> 31);
-		uint32_t value2enc = (value2 << 1) ^ (value2 >> 31);
+		
+		if (value1 != 0 || value2 != 0)
+		{
+			uint32_t value1enc = (value1 << 1) ^ (value1 >> 31);
+			uint32_t value2enc = (value2 << 1) ^ (value2 >> 31);
 
-		outFeature->add_geometry(value1enc);
-		outFeature->add_geometry(value2enc);
+			outFeature->add_geometry(value1enc);
+			outFeature->add_geometry(value2enc);
+			cmdCount ++;
+		}
 		cursorx = cxi;
 		cursory = cyi;
 	}
+
+	//Go back and add the command with count
+	uint32_t cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
+	CheckCmdId(cmdIdCount, cmdId, cmdCount);
+	outFeature->set_geometry(cmdIdCountIndex, cmdIdCount);
 }
 
 void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type, 
@@ -514,13 +529,7 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 
 	if(type == vector_tile::Tile_GeomType_POINT)
 	{
-		uint32_t cmdId = 1;
-		uint32_t cmdCount = points.size();
-		uint32_t cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
-		CheckCmdId(cmdIdCount, 1, cmdCount);
-		outFeature->add_geometry(cmdIdCount);
-
-		EncodePoints(points, false, 0, extent, cursorx, cursory, outFeature);
+		EncodePoints(points, 1, false, 0, extent, cursorx, cursory, outFeature);
 	}
 
 	if(type == vector_tile::Tile_GeomType_LINESTRING)
@@ -531,23 +540,12 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 			if (line.size() < 2) continue;
 			
 			//Move to start
-			uint32_t cmdId = 1;
-			uint32_t cmdCount = 1;
-			uint32_t cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
-			outFeature->add_geometry(cmdIdCount);
-
 			vector<Point2D> tmpPoints;
 			tmpPoints.push_back(line[0]);
-			EncodePoints(tmpPoints, false, 0, extent, cursorx, cursory, outFeature);
+			EncodePoints(tmpPoints, 1, false, 0, extent, cursorx, cursory, outFeature);
 
 			//Draw line shape
-			cmdId = 2;
-			cmdCount = line.size()-1;
-			cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
-			CheckCmdId(cmdIdCount, 2, line.size()-1);
-			outFeature->add_geometry(cmdIdCount);
-
-			EncodePoints(line, false, 1, extent, cursorx, cursory, outFeature);
+			EncodePoints(line, 2, false, 1, extent, cursorx, cursory, outFeature);
 		}
 	}
 
@@ -561,31 +559,20 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 			bool reverseOuter = CheckWinding(tmpTileSpace) < 0.0;
 			
 			//Move to start of outer polygon
-			uint32_t cmdId = 1;
-			uint32_t cmdCount = 1;
-			uint32_t cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
-			outFeature->add_geometry(cmdIdCount);
-
 			vector<Point2D> tmpPoints;
 			if (reverseOuter)
 				tmpPoints.push_back(polygon.first[polygon.first.size()-1]);
 			else
 				tmpPoints.push_back(polygon.first[0]);
-			EncodePoints(tmpPoints, false, 0, extent, cursorx, cursory, outFeature);
+			EncodePoints(tmpPoints, 1, false, 0, extent, cursorx, cursory, outFeature);
 
 			//Draw line shape of outer polygon
-			cmdId = 2;
-			cmdCount = polygon.first.size()-1;
-			cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
-			CheckCmdId(cmdIdCount, 2, polygon.first.size()-1);
-			outFeature->add_geometry(cmdIdCount);
-
-			EncodePoints(polygon.first, reverseOuter, 1, extent, cursorx, cursory, outFeature);
+			EncodePoints(polygon.first, 2, reverseOuter, 1, extent, cursorx, cursory, outFeature);
 
 			//Close outer contour
-			cmdId = 7;
-			cmdCount = 1;
-			cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
+			uint32_t cmdId = 7;
+			uint32_t cmdCount = 1;
+			uint32_t cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
 			outFeature->add_geometry(cmdIdCount);
 
 			//Inner polygons
@@ -597,26 +584,15 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 				bool reverseInner = CheckWinding(tmpTileSpace) >= 0.0;
 
 				//Move to start of inner polygon
-				uint32_t cmdId = 1;
-				uint32_t cmdCount = 1;
-				uint32_t cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
-				outFeature->add_geometry(cmdIdCount);
-
 				vector<Point2D> tmpPoints;
 				if (reverseInner)
 					tmpPoints.push_back(inner[inner.size()-1]);
 				else
 					tmpPoints.push_back(inner[0]);
-				EncodePoints(tmpPoints, false, 0, extent, cursorx, cursory, outFeature);
+				EncodePoints(tmpPoints, 1, false, 0, extent, cursorx, cursory, outFeature);
 
 				//Draw line shape of inner polygon
-				cmdId = 2;
-				cmdCount = inner.size()-1;
-				cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
-				CheckCmdId(cmdIdCount, 2, inner.size()-1);
-				outFeature->add_geometry(cmdIdCount);
-
-				EncodePoints(inner, reverseInner, 1, extent, cursorx, cursory, outFeature);
+				EncodePoints(inner, 2, reverseInner, 1, extent, cursorx, cursory, outFeature);
 
 				//Close inner contour
 				cmdId = 7;
