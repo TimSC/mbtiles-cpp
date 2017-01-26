@@ -7,7 +7,9 @@
 #include "vector_tile21/vector_tile.pb.h"
 
 typedef std::pair<double, double> Point2D;
+typedef std::pair<int, int> Point2Di;
 typedef std::vector<Point2D> LineLoop2D;
+typedef std::vector<Point2Di> LineLoop2Di;
 typedef std::pair<LineLoop2D, std::vector<LineLoop2D> > Polygon2D;
 std::string FeatureTypeToStr(int type);
 ///Derive a class from this to act as storage for the results. This
@@ -81,7 +83,14 @@ protected:
 		int cmdId,
 		bool reverseOrder,
 		size_t startIndex, 
-		int extent, int &cursorx, int &cursory, vector_tile::Tile_Feature *outFeature);
+		int extent, int &cursorx, int &cursory, 
+		vector_tile::Tile_Feature *outFeature);
+	void EncodeTileSpacePoints(const std::vector<Point2Di> &points, 
+		int cmdId,
+		bool reverseOrder,
+		size_t startIndex, 
+		int &cursorx, int &cursory, 
+		vector_tile::Tile_Feature *outFeature);
 	void EncodeGeometry(vector_tile::Tile_GeomType type,
 		int extent,
 		const std::vector<Point2D> &points, 
@@ -89,7 +98,9 @@ protected:
 		const std::vector<Polygon2D> &polygons,
 		vector_tile::Tile_Feature *outFeature);
 	void ConvertToTileCoords(const LineLoop2D &pts, 
-		int extent, LineLoop2D &out);
+		int extent, LineLoop2Di &out);
+	void DeduplicatePoints(const LineLoop2Di &points, LineLoop2Di &out);
+
 };
 
 int long2tilex(double lon, int z);

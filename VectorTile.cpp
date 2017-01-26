@@ -75,6 +75,18 @@ inline double CheckWinding(LineLoop2D pts)
 	return -total;
 }
 
+inline double CheckWindingi(LineLoop2Di pts) 
+{
+	double total = 0.0;
+	for(size_t i=0; i < pts.size(); i++)
+	{
+		size_t i2 = (i+1)%pts.size();
+		double val = ((double)(pts[i2].first) - (double)(pts[i].first))*((double)(pts[i2].second) + (double)(pts[i].second));
+		total += val;
+	}
+	return -total;
+}
+
 void CheckCmdId(uint32_t cmdIdCount, int cmdId, size_t count)
 {
 	int cmdId2 = cmdIdCount & 0x7;
@@ -476,9 +488,10 @@ void EncodeVectorTile::EncodePoints(const vector<Point2D> &points,
 	size_t startIndex, 
 	int extent, int &cursorx, int &cursory, vector_tile::Tile_Feature *outFeature)
 {
-	size_t cmdIdCountIndex = outFeature->geometry_size();
-	outFeature->add_geometry(0); //Placeholder for command
-	size_t cmdCount = 0;
+	size_t cmdCount = points.size() - startIndex;
+	uint32_t cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
+	CheckCmdId(cmdIdCount, cmdId, cmdCount);
+	outFeature->add_geometry(cmdIdCount);
 
 	for(size_t i = startIndex;i < points.size(); i++)
 	{
@@ -494,23 +507,48 @@ void EncodeVectorTile::EncodePoints(const vector<Point2D> &points,
 		int32_t value1 = cxi - cursorx;
 		int32_t value2 = cyi - cursory;
 		
-		if (value1 != 0 || value2 != 0)
-		{
-			uint32_t value1enc = (value1 << 1) ^ (value1 >> 31);
-			uint32_t value2enc = (value2 << 1) ^ (value2 >> 31);
+		uint32_t value1enc = (value1 << 1) ^ (value1 >> 31);
+		uint32_t value2enc = (value2 << 1) ^ (value2 >> 31);
 
-			outFeature->add_geometry(value1enc);
-			outFeature->add_geometry(value2enc);
-			cmdCount ++;
-		}
+		outFeature->add_geometry(value1enc);
+		outFeature->add_geometry(value2enc);
+		cmdCount ++;
+
 		cursorx = cxi;
 		cursory = cyi;
 	}
+}
 
-	//Go back and add the command with count
+void EncodeVectorTile::EncodeTileSpacePoints(const vector<Point2Di> &points, 
+	int cmdId,
+	bool reverseOrder,
+	size_t startIndex, 
+	int &cursorx, int &cursory, vector_tile::Tile_Feature *outFeature)
+{
+	size_t cmdCount = points.size() - startIndex;
 	uint32_t cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
 	CheckCmdId(cmdIdCount, cmdId, cmdCount);
-	outFeature->set_geometry(cmdIdCountIndex, cmdIdCount);
+	outFeature->add_geometry(cmdIdCount);
+
+	for(size_t i = startIndex;i < points.size(); i++)
+	{
+		size_t i2 = i;
+		if(reverseOrder)
+			i2 = points.size() - 1 - i;
+
+		int32_t value1 = points[i2].first - cursorx;
+		int32_t value2 = points[i2].second - cursory;
+		
+		uint32_t value1enc = (value1 << 1) ^ (value1 >> 31);
+		uint32_t value2enc = (value2 << 1) ^ (value2 >> 31);
+
+		outFeature->add_geometry(value1enc);
+		outFeature->add_geometry(value2enc);
+		cmdCount ++;
+
+		cursorx = points[i2].first;
+		cursory = points[i2].second;
+	}
 }
 
 void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type, 
@@ -525,7 +563,7 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 	int cursorx = 0, cursory = 0;
 	//double prevx = 0.0, prevy = 0.0;
 	outFeature->set_type(type);
-	LineLoop2D tmpTileSpace;
+	LineLoop2Di tmpTileSpace, tmpTileSpace2;
 
 	if(type == vector_tile::Tile_GeomType_POINT)
 	{
@@ -554,20 +592,21 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 		for(size_t i=0;i < polygons.size(); i++)
 		{
 			const Polygon2D &polygon = polygons[i];
-			if (polygon.first.size() < 2) continue;
 			this->ConvertToTileCoords(polygon.first, extent, tmpTileSpace);
-			bool reverseOuter = CheckWinding(tmpTileSpace) < 0.0;
+			this->DeduplicatePoints(tmpTileSpace, tmpTileSpace2);
+			if (tmpTileSpace2.size() < 2) continue;
+			bool reverseOuter = CheckWindingi(tmpTileSpace2) < 0.0;
 			
 			//Move to start of outer polygon
-			vector<Point2D> tmpPoints;
+			vector<Point2Di> tmpPoints;
 			if (reverseOuter)
-				tmpPoints.push_back(polygon.first[polygon.first.size()-1]);
+				tmpPoints.push_back(tmpTileSpace2[tmpTileSpace2.size()-1]);
 			else
-				tmpPoints.push_back(polygon.first[0]);
-			EncodePoints(tmpPoints, 1, false, 0, extent, cursorx, cursory, outFeature);
+				tmpPoints.push_back(tmpTileSpace2[0]);
+			EncodeTileSpacePoints(tmpPoints, 1, false, 0, cursorx, cursory, outFeature);
 
 			//Draw line shape of outer polygon
-			EncodePoints(polygon.first, 2, reverseOuter, 1, extent, cursorx, cursory, outFeature);
+			EncodeTileSpacePoints(tmpTileSpace2, 2, reverseOuter, 1, cursorx, cursory, outFeature);
 
 			//Close outer contour
 			uint32_t cmdId = 7;
@@ -579,20 +618,21 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 			for(size_t j=0;j < polygon.second.size(); j++)
 			{
 				const LineLoop2D &inner = polygon.second[j];
-				if(inner.size() < 2) continue;
 				this->ConvertToTileCoords(inner, extent, tmpTileSpace);
-				bool reverseInner = CheckWinding(tmpTileSpace) >= 0.0;
+				this->DeduplicatePoints(tmpTileSpace, tmpTileSpace2);
+				if(tmpTileSpace2.size() < 2) continue;
+				bool reverseInner = CheckWindingi(tmpTileSpace2) >= 0.0;
 
 				//Move to start of inner polygon
-				vector<Point2D> tmpPoints;
+				vector<Point2Di> tmpPoints;
 				if (reverseInner)
-					tmpPoints.push_back(inner[inner.size()-1]);
+					tmpPoints.push_back(tmpTileSpace2[tmpTileSpace2.size()-1]);
 				else
-					tmpPoints.push_back(inner[0]);
-				EncodePoints(tmpPoints, 1, false, 0, extent, cursorx, cursory, outFeature);
+					tmpPoints.push_back(tmpTileSpace2[0]);
+				EncodeTileSpacePoints(tmpPoints, 1, false, 0, cursorx, cursory, outFeature);
 
 				//Draw line shape of inner polygon
-				EncodePoints(inner, 2, reverseInner, 1, extent, cursorx, cursory, outFeature);
+				EncodeTileSpacePoints(tmpTileSpace2, 2, reverseInner, 1, cursorx, cursory, outFeature);
 
 				//Close inner contour
 				cmdId = 7;
@@ -606,14 +646,27 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 
 }
 
-void EncodeVectorTile::ConvertToTileCoords(const LineLoop2D &points, int extent, LineLoop2D &out)
+void EncodeVectorTile::ConvertToTileCoords(const LineLoop2D &points, int extent, LineLoop2Di &out)
 {
 	out.clear();
 	for(size_t i = 0;i < points.size(); i++)
 	{
 		double cx = (points[i].first - this->lonMin) * double(extent) / double(this->dLon);
 		double cy = (points[i].second - this->latMax - this->dLat) * double(extent) / (-this->dLat);
-		out.push_back(Point2D(cx, cy));
+		out.push_back(Point2Di(round(cx), round(cy)));
+	}
+}
+
+void EncodeVectorTile::DeduplicatePoints(const LineLoop2Di &points, LineLoop2Di &out)
+{
+	out.clear();
+	int px = 0, py = 0;
+	for(size_t i = 0; i < points.size(); i ++)
+	{
+		if(i == 0 || px != points[i].first || py != points[i].second)
+			out.push_back(Point2Di(points[i].first, points[i].second));
+		px = points[i].first;
+		py = points[i].second;
 	}
 }
 
