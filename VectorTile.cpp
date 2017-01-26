@@ -482,43 +482,6 @@ void EncodeVectorTile::Finish()
 	this->tile.SerializeToOstream(this->output);
 }
 
-void EncodeVectorTile::EncodePoints(const vector<Point2D> &points, 
-	int cmdId,
-	bool reverseOrder,
-	size_t startIndex, 
-	int extent, int &cursorx, int &cursory, vector_tile::Tile_Feature *outFeature)
-{
-	size_t cmdCount = points.size() - startIndex;
-	uint32_t cmdIdCount = (cmdId & 0x7) | (cmdCount << 3);
-	CheckCmdId(cmdIdCount, cmdId, cmdCount);
-	outFeature->add_geometry(cmdIdCount);
-
-	for(size_t i = startIndex;i < points.size(); i++)
-	{
-		size_t i2 = i;
-		if(reverseOrder)
-			i2 = points.size() - 1 - i;
-
-		double cx = (points[i2].first - this->lonMin) * double(extent) / double(this->dLon);
-		double cy = (points[i2].second - this->latMax - this->dLat) * double(extent) / (-this->dLat);
-
-		int cxi = (int)round(cx); //Round cx and cy (remember cx and cy might be negative!)
-		int cyi = (int)round(cy);
-		int32_t value1 = cxi - cursorx;
-		int32_t value2 = cyi - cursory;
-		
-		uint32_t value1enc = (value1 << 1) ^ (value1 >> 31);
-		uint32_t value2enc = (value2 << 1) ^ (value2 >> 31);
-
-		outFeature->add_geometry(value1enc);
-		outFeature->add_geometry(value2enc);
-		cmdCount ++;
-
-		cursorx = cxi;
-		cursory = cyi;
-	}
-}
-
 void EncodeVectorTile::EncodeTileSpacePoints(const vector<Point2Di> &points, 
 	int cmdId,
 	bool reverseOrder,
@@ -567,7 +530,8 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 
 	if(type == vector_tile::Tile_GeomType_POINT)
 	{
-		EncodePoints(points, 1, false, 0, extent, cursorx, cursory, outFeature);
+		this->ConvertToTileCoords(points, extent, tmpTileSpace);
+		EncodeTileSpacePoints(tmpTileSpace, 1, false, 0, cursorx, cursory, outFeature);
 	}
 
 	if(type == vector_tile::Tile_GeomType_LINESTRING)
@@ -575,15 +539,17 @@ void EncodeVectorTile::EncodeGeometry(vector_tile::Tile_GeomType type,
 		for(size_t i=0;i < lines.size(); i++)
 		{
 			const vector<Point2D> &line = lines[i];
-			if (line.size() < 2) continue;
+			this->ConvertToTileCoords(line, extent, tmpTileSpace);
+			this->DeduplicatePoints(tmpTileSpace, tmpTileSpace2);
+			if (tmpTileSpace2.size() < 2) continue;
 			
 			//Move to start
-			vector<Point2D> tmpPoints;
-			tmpPoints.push_back(line[0]);
-			EncodePoints(tmpPoints, 1, false, 0, extent, cursorx, cursory, outFeature);
+			vector<Point2Di> tmpPoints;
+			tmpPoints.push_back(tmpTileSpace2[0]);
+			EncodeTileSpacePoints(tmpPoints, 1, false, 0, cursorx, cursory, outFeature);
 
 			//Draw line shape
-			EncodePoints(line, 2, false, 1, extent, cursorx, cursory, outFeature);
+			EncodeTileSpacePoints(tmpTileSpace2, 2, false, 1, cursorx, cursory, outFeature);
 		}
 	}
 
