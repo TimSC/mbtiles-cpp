@@ -63,18 +63,6 @@ string ValueToStr(const ::vector_tile::Tile_Value &value)
 	return "Error: Unknown value type";
 }
 
-inline double CheckWinding(LineLoop2D pts) 
-{
-	double total = 0.0;
-	for(size_t i=0; i < pts.size(); i++)
-	{
-		size_t i2 = (i+1)%pts.size();
-		double val = (pts[i2].first - pts[i].first)*(pts[i2].second + pts[i].second);
-		total += val;
-	}
-	return -total;
-}
-
 inline double CheckWindingi(LineLoop2Di pts) 
 {
 	double total = 0.0;
@@ -165,14 +153,14 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 	vector<Polygon2D> &polygonsOut)	
 {
 	vector<Point2D> points;
-	vector<Point2D> pointsTileSpace;
+	vector<Point2Di> pointsTileSpace;
 	Polygon2D currentPolygon;
 	bool currentPolygonSet = false;
 	unsigned prevCmdId = 0;
 
 	int cursorx = 0, cursory = 0;
 	double prevx = 0.0, prevy = 0.0; //Lat lon
-	double prevxTileSpace = 0.0, prevyTileSpace = 0.0;
+	int prevxTileSpace = 0, prevyTileSpace = 0;
 	pointsOut.clear();
 	linesOut.clear();
 	polygonsOut.clear();
@@ -243,7 +231,7 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 			{
 				if (feature.type() == vector_tile::Tile_GeomType_POLYGON)
 				{
-					double winding = CheckWinding(pointsTileSpace);
+					double winding = CheckWindingi(pointsTileSpace);
 					if(winding >= 0.0)
 					{
 						if(currentPolygonSet)
