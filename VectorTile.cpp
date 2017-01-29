@@ -90,9 +90,9 @@ DecodeVectorTile::DecodeVectorTile(int tileZoom, int tileColumn, int tileRow, cl
 	this->output = &output;
 	this->numTiles = pow(2,tileZoom);
 	this->lonMin = tilex2long(tileColumn, tileZoom);
-	this->latMax = tiley2lat(numTiles-tileRow-1, tileZoom);
+	this->latMax = tiley2lat(tileRow+1, tileZoom);
 	this->lonMax = tilex2long(tileColumn+1, tileZoom);
-	this->latMin = tiley2lat(numTiles-tileRow, tileZoom);
+	this->latMin = tiley2lat(tileRow+2, tileZoom);
 	this->dLat = this->latMax - this->latMin;
 	this->dLon = this->lonMax - this->lonMin;
 }
@@ -377,9 +377,9 @@ EncodeVectorTile::EncodeVectorTile(int tileZoom, int tileColumn, int tileRow, st
 {
 	this->numTiles = pow(2,tileZoom);
 	this->lonMin = tilex2long(tileColumn, tileZoom);
-	this->latMax = tiley2lat(numTiles-tileRow-1, tileZoom);
+	this->latMax = tiley2lat(tileRow+1, tileZoom);
 	this->lonMax = tilex2long(tileColumn+1, tileZoom);
-	this->latMin = tiley2lat(numTiles-tileRow, tileZoom);
+	this->latMin = tiley2lat(tileRow+2, tileZoom);
 	this->dLat = this->latMax - this->latMin;
 	this->dLon = this->lonMax - this->lonMin;
 }
@@ -495,7 +495,6 @@ void EncodeVectorTile::EncodeTileSpacePoints(const vector<Point2Di> &points,
 
 		outFeature->add_geometry(value1enc);
 		outFeature->add_geometry(value2enc);
-		cmdCount ++;
 
 		cursorx = points[i2].first;
 		cursory = points[i2].second;
