@@ -90,9 +90,9 @@ DecodeVectorTile::DecodeVectorTile(int tileZoom, int tileColumn, int tileRow, cl
 	this->output = &output;
 	this->numTiles = pow(2,tileZoom);
 	this->lonMin = tilex2long(tileColumn, tileZoom);
-	this->latMax = tiley2lat(tileRow+1, tileZoom);
+	this->latMax = tiley2lat(tileRow, tileZoom);
 	this->lonMax = tilex2long(tileColumn+1, tileZoom);
-	this->latMin = tiley2lat(tileRow+2, tileZoom);
+	this->latMin = tiley2lat(tileRow+1, tileZoom);
 	this->dLat = this->latMax - this->latMin;
 	this->dLon = this->lonMax - this->lonMin;
 }
@@ -181,7 +181,7 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 				cursorx += value1;
 				cursory += value2;
 				double px = this->dLon * double(cursorx) / double(extent) + this->lonMin;
-				double py = - this->dLat * double(cursory) / double(extent) + this->latMax + this->dLat;
+				double py = - this->dLat * double(cursory) / double(extent) + this->latMax;
 				
 				if (feature.type() == vector_tile::Tile_GeomType_POINT)
 					pointsOut.push_back(Point2D(px, py));
@@ -215,7 +215,7 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 				cursorx += value1;
 				cursory += value2;
 				double px = this->dLon * double(cursorx) / double(extent) + this->lonMin;
-				double py = - this->dLat * double(cursory) / double(extent) + this->latMax + this->dLat;
+				double py = - this->dLat * double(cursory) / double(extent) + this->latMax;
 
 				points.push_back(Point2D(px, py));
 				pointsTileSpace.push_back(Point2D(cursorx, cursory));
@@ -377,9 +377,9 @@ EncodeVectorTile::EncodeVectorTile(int tileZoom, int tileColumn, int tileRow, st
 {
 	this->numTiles = pow(2,tileZoom);
 	this->lonMin = tilex2long(tileColumn, tileZoom);
-	this->latMax = tiley2lat(tileRow+1, tileZoom);
+	this->latMax = tiley2lat(tileRow, tileZoom);
 	this->lonMax = tilex2long(tileColumn+1, tileZoom);
-	this->latMin = tiley2lat(tileRow+2, tileZoom);
+	this->latMin = tiley2lat(tileRow+1, tileZoom);
 	this->dLat = this->latMax - this->latMin;
 	this->dLon = this->lonMax - this->lonMin;
 }
@@ -605,7 +605,7 @@ void EncodeVectorTile::ConvertToTileCoords(const LineLoop2D &points, int extent,
 	for(size_t i = 0;i < points.size(); i++)
 	{
 		double cx = (points[i].first - this->lonMin) * double(extent) / double(this->dLon);
-		double cy = (points[i].second - this->latMax - this->dLat) * double(extent) / (-this->dLat);
+		double cy = (points[i].second - this->latMax) * double(extent) / (-this->dLat);
 		out.push_back(Point2Di(round(cx), round(cy)));
 	}
 }
