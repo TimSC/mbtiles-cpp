@@ -4,7 +4,8 @@ pipeline {
     stage('Build') {
       steps {
         git(url: 'https://github.com/Serinox/mbtiles-cpp.git', branch: 'master')
-        sh '''mkdir build
+        sh '''rm -rf build
+mkdir build
 cd build
 cmake ../'''
       }
