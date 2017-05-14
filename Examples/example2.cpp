@@ -2,13 +2,13 @@
 #include <cstring>
 #include <map>
 #include <fstream>
-#include "cppGzip/DecodeGzip.h"
-#include "cppGzip/EncodeGzip.h"
+#include "../cppGzip/DecodeGzip.h"
+#include "../cppGzip/EncodeGzip.h"
 #include <math.h>
 #include <sstream>
 #include <fstream>
 #include <stdlib.h>
-#include "VectorTile.h"
+#include "../Include/VectorTile.h"
 using namespace std;
 
 //curl https://api.mapbox.com/v4/mapbox.mapbox-streets-v7/3/2/3.vector.pbf?access_token=<API_key> > map.bin

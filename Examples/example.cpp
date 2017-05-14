@@ -2,13 +2,13 @@
 #include <cstring>
 #include <map>
 #include <fstream>
-#include "cppGzip/DecodeGzip.h"
-#include "MBTileReader.h"
+#include "../cppGzip/DecodeGzip.h"
+#include "../Include/MBTileReader.h"
 #include <math.h>
 #include <sstream>
 #include <fstream>
 #include <stdlib.h>
-#include "VectorTile.h"
+#include "../Include/VectorTile.h"
 using namespace std;
 
 // http://stackoverflow.com/a/236803/4288232

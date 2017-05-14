@@ -1,4 +1,4 @@
-#include "VectorTile.h"
+#include "../Include/VectorTile.h"
 #include <string>
 #include <math.h>
 #include <iostream>
@@ -467,7 +467,7 @@ void EncodeVectorTile::Feature(int typeEnum, bool hasId, unsigned long long id,
 
 void EncodeVectorTile::Finish()
 {
-	this->tile.SerializeToOstream(this->output);
+	//this->tile.SerializeToOstream(this->output);
 }
 
 void EncodeVectorTile::EncodeTileSpacePoints(const vector<Point2Di> &points, 
