@@ -4,8 +4,8 @@ pipeline {
     stage('Build') {
       steps {
         git(url: 'https://github.com/Serinox/mbtiles-cpp.git', branch: 'master')
-        sh '''git submodules init
-git submodules update
+        sh '''git submodule init
+git submodule update
 
 
 if [ -d "build" ]; then
