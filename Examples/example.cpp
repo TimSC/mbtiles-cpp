@@ -63,7 +63,7 @@ int main(int argc, char **argv)
 	cout << "format:" << format << endl;
 	cout << "bounds:" << mbTileReader.GetMetadata("bounds") << endl;
 
-	if(0) //Get metadata fields
+	if(1) //Get metadata fields
 	{
 		std::vector<std::string> fieldNames;
 		mbTileReader.GetMetadataFields(fieldNames);
@@ -88,7 +88,7 @@ int main(int argc, char **argv)
 	int tileRow = 9626;
 	mbTileReader.GetTile(tileZoom, tileColumn, tileRow, blob);
 
-	if(format == "pbf" && versionInts[0] == 2)
+	if(format == "pbf" && versionInts[0] == 3)
 	{
 		//Ungzip the data
 		std::stringbuf buff;
