@@ -6,7 +6,7 @@ pipeline {
         git(url: 'https://github.com/Serinox/mbtiles-cpp.git', branch: 'master')
         sh '''
 if [ -d "build" ]; then
-    rm -rf build
+rm -rf build
 fi
 mkdir build
 cd build
