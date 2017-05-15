@@ -25,7 +25,7 @@ include(FindProtobuf)
 include(FindZLIB)
 
 #find sqlite
-find_package (sqlite3)
+find_package (SQLite3)
 
 include_directories(Include/)
 include_directories(${SQLITE3_INCLUDE_DIR})
