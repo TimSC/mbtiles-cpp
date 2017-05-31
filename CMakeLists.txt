@@ -27,14 +27,15 @@ include(FindZLIB)
 #find sqlite
 find_package (SQLite3)
 
-include_directories(${CMAKE_CURRENT_LIST_DIR}/Include/)
-include_directories(${SQLITE3_INCLUDE_DIR})
-include_directories(${Protobuf_INCLUDE_DIR})
-include_directories(${ZLIB_INCLUDE_DIR})
+
 
 
 
 add_library(mbtilesCpp ${SOURCE_FILES})
+target_include_directories(mbtilesCpp PUBLIC ${CMAKE_CURRENT_LIST_DIR}/Include/)
+target_include_directories(mbtilesCpp PUBLIC ${SQLITE3_INCLUDE_DIR})
+target_include_directories(mbtilesCpp PUBLIC ${Protobuf_INCLUDE_DIR})
+target_include_directories(mbtilesCpp PUBLIC ${ZLIB_INCLUDE_DIR})
 TARGET_LINK_LIBRARIES(mbtilesCpp ${SQLITE3_LIBRARY})
 TARGET_LINK_LIBRARIES(mbtilesCpp ${Protobuf_LIBRARY})
 TARGET_LINK_LIBRARIES(mbtilesCpp ${ZLIB_LIBRARY})
