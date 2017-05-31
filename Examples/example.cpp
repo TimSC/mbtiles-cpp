@@ -38,6 +38,7 @@ public:
 		//In real use, delete this function call and add your own functionality.
 		DecodeVectorTileResults::Feature(typeEnum, hasId, id, 
 			tagMap, pointsOut, linesOut, polygonsOut);
+		std::cout << "\n";
 	}
 };
 
@@ -70,7 +71,7 @@ int main(int argc, char **argv)
 		for(unsigned i=0;i<fieldNames.size();i++) cout << fieldNames[i] << endl;
 	}
 
-	if(0) //Get list of tiles
+	if(1) //Get list of tiles
 	{
 		TileInfoRows tileInfoRows;
 		mbTileReader.ListTiles(tileInfoRows);
