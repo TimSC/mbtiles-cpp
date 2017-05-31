@@ -4,17 +4,17 @@ project(mbtilesCpp)
 set(CMAKE_CXX_STANDARD 14)
 
 set(SOURCE_FILES
-        Source/vector_tile21/vector_tile.pb.cc
-        Include/vector_tile21/vector_tile.pb.h
-        Source/MBTileReader.cpp
-        Include/MBTileReader.h
-        Source/VectorTile.cpp
-        Include/VectorTile.h
-        cppGzip/DecodeGzip.cpp
-        cppGzip/DecodeGzip.h
-        cppGzip/EncodeGzip.cpp
-        cppGzip/EncodeGzip.h
-        cppGzip/HandleDeflate.h)
+        ${CMAKE_CURRENT_LIST_DIR}/Source/vector_tile21/vector_tile.pb.cc
+        ${CMAKE_CURRENT_LIST_DIR}/Include/vector_tile21/vector_tile.pb.h
+        ${CMAKE_CURRENT_LIST_DIR}/Source/MBTileReader.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/Include/MBTileReader.h
+        ${CMAKE_CURRENT_LIST_DIR}/Source/VectorTile.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/Include/VectorTile.h
+        ${CMAKE_CURRENT_LIST_DIR}/cppGzip/DecodeGzip.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/cppGzip/DecodeGzip.h
+        ${CMAKE_CURRENT_LIST_DIR}/cppGzip/EncodeGzip.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/cppGzip/EncodeGzip.h
+        ${CMAKE_CURRENT_LIST_DIR}/cppGzip/HandleDeflate.h)
 
 #       Examples/example.cpp
 #       Examples/example2.cpp
@@ -27,7 +27,7 @@ include(FindZLIB)
 #find sqlite
 find_package (SQLite3)
 
-include_directories(Include/)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/Include/)
 include_directories(${SQLITE3_INCLUDE_DIR})
 include_directories(${Protobuf_INCLUDE_DIR})
 include_directories(${ZLIB_INCLUDE_DIR})
