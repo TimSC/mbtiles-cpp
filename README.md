@@ -11,12 +11,14 @@ MBTiles available at http://osm2vectortiles.org/downloads/ and https://www.mapbo
 
 This software may be redistributed under the MIT license.
 
-sudo apt-get install libsqlite3-dev g++ libprotobuf-dev zlib1g-dev
+   git clone --recursive git@github.com:TimSC/mbtiles-cpp.git
 
-make
+   sudo apt-get install libsqlite3-dev g++ libprotobuf-dev zlib1g-dev
+
+   make
 
 Useful?
-=======
+-------
 
 To update the protobuf files, remove the line "optimize_for = LITE_RUNTIME;" from vector_tile.proto, then
 

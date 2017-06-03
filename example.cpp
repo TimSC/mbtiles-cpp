@@ -47,7 +47,8 @@ int main(int argc, char **argv)
 	// compatible with the version of the headers we compiled against.
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-	//Grab from http://osm2vectortiles.org/downloads/
+	//Grab from https://openmaptiles.org/downloads/
+	//However, these tiles seem to have an incorrect version number? (3.3)
 	class MBTileReader mbTileReader("cairo_egypt.mbtiles");	
 	
 	cout << "name:" << mbTileReader.GetMetadata("name") << endl;
@@ -110,6 +111,15 @@ int main(int argc, char **argv)
 		vectorDec.DecodeTileData(tileData);
 	}
 	
+	if(true)
+	{
+		//Save a .vector.pbf to a file
+		ofstream outFi;
+		outFi.open("map.vector.pbf", ios::binary);
+		outFi.write(blob.c_str(), blob.length());
+		outFi.close();
+	}
+
 	if(format == "jpg" || format == "png")
 	{
 		//Save image to output file
