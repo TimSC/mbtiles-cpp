@@ -89,7 +89,7 @@ int main(int argc, char **argv)
 	int tileRow = 9626;
 	mbTileReader.GetTile(tileZoom, tileColumn, tileRow, blob);
 
-	if(format == "pbf" && versionInts[0] == 2)
+	if(format == "pbf")
 	{
 		//Ungzip the data
 		std::stringbuf buff;
@@ -109,17 +109,18 @@ int main(int argc, char **argv)
 		class ExampleDataStore results;
 		class DecodeVectorTile vectorDec(tileZoom, tileColumn, tileRow, results);
 		vectorDec.DecodeTileData(tileData);
+
+		if(true)
+		{
+			//Save a .vector.pbf to a file
+			ofstream outFi;
+			outFi.open("map.vector.pbf", ios::binary);
+			outFi.write(blob.c_str(), blob.length());
+			outFi.close();
+		}
+
 	}
 	
-	if(true)
-	{
-		//Save a .vector.pbf to a file
-		ofstream outFi;
-		outFi.open("map.vector.pbf", ios::binary);
-		outFi.write(blob.c_str(), blob.length());
-		outFi.close();
-	}
-
 	if(format == "jpg" || format == "png")
 	{
 		//Save image to output file
