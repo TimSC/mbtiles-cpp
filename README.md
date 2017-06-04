@@ -27,10 +27,11 @@ This software may be redistributed under the MIT license.
 Update pbf files
 ----------------
 
-To update the protobuf files, get vector_tile.proto from https://github.com/mapbox/vector-tile-spec, then
+To update the protobuf files, get vector_tile.proto from https://github.com/mapbox/vector-tile-spec, remove the line "option optimize_for = LITE_RUNTIME;", then
 
   mkdir vector_tile21
 
   protoc vector_tile.proto --cpp_out vector_tile21
 
+googlebuf LITE is avoided because it doesn't contain SerializeToOstream functionality.
 
