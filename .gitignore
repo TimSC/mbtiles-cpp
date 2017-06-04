@@ -4,3 +4,4 @@ example2
 *.pbf
 *.proto
 
+.idea/

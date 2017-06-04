@@ -2,13 +2,13 @@
 #include <cstring>
 #include <map>
 #include <fstream>
-#include "cppGzip/DecodeGzip.h"
-#include "cppGzip/EncodeGzip.h"
+#include "../cppGzip/DecodeGzip.h"
+#include "../cppGzip/EncodeGzip.h"
 #include <math.h>
 #include <sstream>
 #include <fstream>
 #include <stdlib.h>
-#include "VectorTile.h"
+#include "../Include/VectorTile.h"
 using namespace std;
 
 int ReadFileContents(const char *filename, int binaryMode, std::string &contentOut)

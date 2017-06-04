@@ -1,3 +1,4 @@
+
 # mbtiles-cpp
 MBTiles reader, vector map pbf v2.0 reader. C++ library for decoding of mbtiles and vector data into function callbacks. It can be integrated by compiling it inline with your code by adding appropriate files to your project.
 
@@ -15,13 +16,21 @@ This software may be redistributed under the MIT license.
 
    sudo apt-get install libsqlite3-dev g++ libprotobuf-dev zlib1g-dev
 
+   mkdir build
+
+   cd build
+
+   cmake ..
+
    make
 
-Useful?
--------
+Update pbf files
+----------------
 
-To update the protobuf files, remove the line "optimize_for = LITE_RUNTIME;" from vector_tile.proto, then
+To update the protobuf files, get vector_tile.proto from https://github.com/mapbox/vector-tile-spec, then
 
-  protoc vector_tile.proto --cpp_out vector_tile20
+  mkdir vector_tile21
+
+  protoc vector_tile.proto --cpp_out vector_tile21
 
 

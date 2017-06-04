@@ -1,4 +1,4 @@
-#include "VectorTile.h"
+#include "../Include/VectorTile.h"
 #include <string>
 #include <math.h>
 #include <iostream>
@@ -264,24 +264,25 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 // *********************************************
 
 // https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#C.2FC.2B.2B
-int long2tilex(double lon, int z) 
-{ 
-	return (int)(floor((lon + 180.0) / 360.0 * pow(2.0, z))); 
+int long2tilex(double lon, int z)
+{
+	return (int)(floor((lon + 180.0) / 360.0 * pow(2.0, z)));
 }
 
 int lat2tiley(double lat, int z)
-{ 
+{
 	int y = (int)(floor((1.0 - log( tan(lat * M_PI/180.0) + 1.0 / cos(lat * M_PI/180.0)) / M_PI) / 2.0 * pow(2.0, z)));
 	int ymax  = 1 << z;
 	y = ymax - y - 1;
-	return y;}
+	return y;
+}
 
-double tilex2long(int x, int z) 
+double tilex2long(int x, int z)
 {
 	return x / pow(2.0, z) * 360.0 - 180;
 }
 
-double tiley2lat(int y, int z) 
+double tiley2lat(int y, int z)
 {
 	double n = pow(2.0,z);
 	int ymax  = 1 << z;
