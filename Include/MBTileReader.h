@@ -17,8 +17,8 @@ public:
 	std::string GetMetadata(const char *metaField);
 	void GetMetadataFields(std::vector<std::string> &fieldNamesOut);
 	void ListTiles(TileInfoRows &tileInfoRowsOut);
-	void GetTile(unsigned int zoomLevel, 
-		unsigned int tileColumn, 
+	void GetTile(unsigned int zoomLevel,
+		unsigned int tileColumn,
 		unsigned int tileRow,
 		std::string &blobOut);
 

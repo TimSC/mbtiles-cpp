@@ -250,13 +250,11 @@ void test_vectortile_linestring_roundtrip()
 
 void test_mbtilereader_nonexistent()
 {
-    // sqlite3_open creates a new empty database for unknown paths, then the
-    // metadata query fails → constructor must throw.
-    const char *path = "/tmp/test_mbtiles_no_metadata_xyz.db";
+    // sqlite3_open_v2 with SQLITE_OPEN_READONLY throws for missing files.
+    const char *path = "/tmp/test_mbtiles_does_not_exist_xyz.db";
     remove(path);
     auto fn = [&]() { MBTileReader reader(path); };
     CHECK_THROWS(fn());
-    remove(path);
 }
 
 void test_malformed_geometry_truncated()

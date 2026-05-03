@@ -15,7 +15,7 @@ MBTileReader::MBTileReader(const char *filename)
 {
 	this->db = NULL;
 
-	int status = sqlite3_open(filename, &this->db);
+	int status = sqlite3_open_v2(filename, &this->db, SQLITE_OPEN_READONLY, nullptr);
 	if(status){
 		sqlite3_close(this->db);
 		throw runtime_error("Error opening database");
@@ -28,6 +28,7 @@ MBTileReader::MBTileReader(const char *filename)
 		string err("SQL error: ");
 		err += zErrMsg;
 		sqlite3_free(zErrMsg);
+		sqlite3_close(this->db);
 		throw runtime_error(err);
 	}
 }

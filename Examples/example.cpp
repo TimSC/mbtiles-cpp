@@ -50,12 +50,7 @@ int main(int argc, char **argv)
 
 	//Grab from https://openmaptiles.org/downloads/
 	//However, these tiles seem to have an incorrect version number? (3.3)
-	const char *dbPath = "egypt_cairo.mbtiles";
-	if(!ifstream(dbPath)) {
-		cerr << "Error: " << dbPath << " not found" << endl;
-		return 1;
-	}
-	class MBTileReader mbTileReader(dbPath);
+	MBTileReader mbTileReader("egypt_cairo.mbtiles");
 	
 	cout << "name:" << mbTileReader.GetMetadata("name") << endl;
 	cout << "type:" << mbTileReader.GetMetadata("type") << endl;
