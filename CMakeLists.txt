@@ -33,6 +33,7 @@ find_package (SQLite3)
 
 add_library(mbtilesCpp ${SOURCE_FILES})
 target_include_directories(mbtilesCpp PUBLIC ${CMAKE_CURRENT_LIST_DIR}/Include/)
+target_include_directories(mbtilesCpp PUBLIC ${CMAKE_CURRENT_LIST_DIR}/Include/vector_tile21/)
 target_include_directories(mbtilesCpp PUBLIC ${SQLITE3_INCLUDE_DIR})
 target_include_directories(mbtilesCpp PUBLIC ${Protobuf_INCLUDE_DIR})
 target_include_directories(mbtilesCpp PUBLIC ${ZLIB_INCLUDE_DIR})
