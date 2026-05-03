@@ -1,9 +1,15 @@
 #include "MBTileReader.h"
 #include <iostream>
 #include <cstring>
+#include <memory>
 #include <stdlib.h>
 #include <math.h>
 using namespace std;
+
+struct ListTilesContext {
+	TileInfoRows *rows;
+	string errorMsg;
+};
 
 MBTileReader::MBTileReader(const char *filename)
 {
@@ -52,7 +58,8 @@ int MBTileReader::MetadataCallback(int argc, char **argv, char **azColName)
 
 string MBTileReader::GetMetadata(const char *metaField)
 {
-	return metadata[metaField];
+	auto it = metadata.find(metaField);
+	return it != metadata.end() ? it->second : string{};
 }
 
 void MBTileReader::GetMetadataFields(vector<string> &fieldNamesOut)
@@ -64,24 +71,32 @@ void MBTileReader::GetMetadataFields(vector<string> &fieldNamesOut)
 
 int MBTileReader::ListTilesCallbackStatic(void *rawPtr, int argc, char **argv, char **azColName)
 {
-	TileInfoRows *tileInfoRows = (TileInfoRows *)rawPtr;
+	ListTilesContext *ctx = static_cast<ListTilesContext *>(rawPtr);
 
-	if(argc != 3)
-		throw runtime_error("Database returned unexpected number of columns");
+	if(argc != 3) {
+		ctx->errorMsg = "Database returned unexpected number of columns";
+		return 1;
+	}
+	if (argv[0] == NULL || argv[1] == NULL || argv[2] == NULL) {
+		ctx->errorMsg = "Invalid tile descriptor";
+		return 1;
+	}
 	std::vector<unsigned int> row;
-	if (argv[0] == NULL || argv[1] == NULL || argv[2] == NULL) 
-		throw runtime_error("Valid tile descriptor");
-	row.push_back(atoi(argv[0])); //This is a bit silly since the data is stored as integers in the database!
-	row.push_back(atoi(argv[1]));
-	row.push_back(atoi(argv[2]));
-	tileInfoRows->push_back(row);
+	row.push_back((unsigned int)atoi(argv[0]));
+	row.push_back((unsigned int)atoi(argv[1]));
+	row.push_back((unsigned int)atoi(argv[2]));
+	ctx->rows->push_back(row);
 	return 0;
 }
 
 void MBTileReader::ListTiles(TileInfoRows &tileInfoRowsOut)
 {
+	ListTilesContext ctx{&tileInfoRowsOut, ""};
 	char *zErrMsg = NULL;
-	int status = sqlite3_exec(this->db, "SELECT zoom_level, tile_column, tile_row FROM tiles;", this->ListTilesCallbackStatic, &tileInfoRowsOut, &zErrMsg);
+	int status = sqlite3_exec(this->db, "SELECT zoom_level, tile_column, tile_row FROM tiles;",
+		this->ListTilesCallbackStatic, &ctx, &zErrMsg);
+	if (!ctx.errorMsg.empty())
+		throw runtime_error(ctx.errorMsg);
 	if( status!=SQLITE_OK )
 	{
 		string err("SQL error: ");
@@ -96,47 +111,44 @@ void MBTileReader::GetTile(unsigned int zoomLevel,
 	unsigned int tileRow,
 	string &blobOut)
 {
-	sqlite3_stmt *stmt = NULL;
+	sqlite3_stmt *stmtRaw = NULL;
 	blobOut.clear();
-	int status = sqlite3_prepare(this->db, 
-		"SELECT tile_data FROM tiles WHERE zoom_level = ? AND tile_column = ? AND tile_row = ?;",  // stmt
-		-1, // If than zero, then stmt is read up to the first nul terminator
-		&stmt,
-		0  // Pointer to unused portion of stmt
+	int status = sqlite3_prepare(this->db,
+		"SELECT tile_data FROM tiles WHERE zoom_level = ? AND tile_column = ? AND tile_row = ?;",
+		-1,
+		&stmtRaw,
+		0
 	);
 	if(status!=SQLITE_OK)
 		throw runtime_error("Could not prepare statement");
 
-	status = sqlite3_bind_int(stmt, 1, zoomLevel);
+	unique_ptr<sqlite3_stmt, decltype(&sqlite3_finalize)> stmt(stmtRaw, sqlite3_finalize);
+
+	status = sqlite3_bind_int(stmtRaw, 1, zoomLevel);
 	if(status!=SQLITE_OK) throw runtime_error("Could not bind value to statement");
-	status = sqlite3_bind_int(stmt, 2, tileColumn);
+	status = sqlite3_bind_int(stmtRaw, 2, tileColumn);
 	if(status!=SQLITE_OK) throw runtime_error("Could not bind value to statement");
-	status = sqlite3_bind_int(stmt, 3, tileRow);
+	status = sqlite3_bind_int(stmtRaw, 3, tileRow);
 	if(status!=SQLITE_OK) throw runtime_error("Could not bind value to statement");
 
 	status = SQLITE_ROW;
 	bool firstRow = true;
 	while(status == SQLITE_ROW)
 	{
-		status = sqlite3_step(stmt);
+		status = sqlite3_step(stmtRaw);
 		if(firstRow && status == SQLITE_DONE)
-		{
-			sqlite3_finalize(stmt);
 			throw out_of_range("Tile not found");
-		}
 
 		if(status == SQLITE_ROW)
 		{
-			int numBytes = sqlite3_column_bytes(stmt, 0);
-			const void *blobRaw = sqlite3_column_blob(stmt, 0);
-			blobOut.insert(0, (const char *)blobRaw, numBytes); //Copy result to output
-			sqlite3_finalize(stmt);
+			int numBytes = sqlite3_column_bytes(stmtRaw, 0);
+			const void *blobRaw = sqlite3_column_blob(stmtRaw, 0);
+			blobOut.assign((const char *)blobRaw, numBytes);
 			return;
 		}
 		firstRow = false;
 	}
 
-	sqlite3_finalize(stmt);	
 	throw runtime_error("Error retrieving tile from database");
 }
 

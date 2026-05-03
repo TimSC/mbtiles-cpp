@@ -8,7 +8,10 @@
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/extension_set.h>
 #include <google/protobuf/wire_format_lite.h>
-#include <google/protobuf/io/zero_copy_stream_impl_lite.h>
+#include <google/protobuf/descriptor.h>
+#include <google/protobuf/generated_message_reflection.h>
+#include <google/protobuf/reflection_ops.h>
+#include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
 
@@ -93,7 +96,123 @@ struct TileDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TileDefaultTypeInternal _Tile_default_instance_;
 }  // namespace vector_tile
+static ::_pb::Metadata file_level_metadata_vector_5ftile_2eproto[4];
+static const ::_pb::EnumDescriptor* file_level_enum_descriptors_vector_5ftile_2eproto[1];
+static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_vector_5ftile_2eproto = nullptr;
+
+const uint32_t TableStruct_vector_5ftile_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Value, _impl_._has_bits_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Value, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Value, _impl_._extensions_),
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Value, _impl_.string_value_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Value, _impl_.float_value_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Value, _impl_.double_value_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Value, _impl_.int_value_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Value, _impl_.uint_value_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Value, _impl_.sint_value_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Value, _impl_.bool_value_),
+  0,
+  3,
+  1,
+  2,
+  5,
+  6,
+  4,
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Feature, _impl_._has_bits_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Feature, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Feature, _impl_.id_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Feature, _impl_.tags_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Feature, _impl_.type_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Feature, _impl_.geometry_),
+  0,
+  ~0u,
+  1,
+  ~0u,
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Layer, _impl_._has_bits_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Layer, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Layer, _impl_._extensions_),
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Layer, _impl_.version_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Layer, _impl_.name_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Layer, _impl_.features_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Layer, _impl_.keys_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Layer, _impl_.values_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile_Layer, _impl_.extent_),
+  2,
+  0,
+  ~0u,
+  ~0u,
+  ~0u,
+  1,
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile, _impl_._extensions_),
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::vector_tile::Tile, _impl_.layers_),
+};
+static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+  { 0, 13, -1, sizeof(::vector_tile::Tile_Value)},
+  { 20, 30, -1, sizeof(::vector_tile::Tile_Feature)},
+  { 34, 46, -1, sizeof(::vector_tile::Tile_Layer)},
+  { 52, -1, -1, sizeof(::vector_tile::Tile)},
+};
+
+static const ::_pb::Message* const file_default_instances[] = {
+  &::vector_tile::_Tile_Value_default_instance_._instance,
+  &::vector_tile::_Tile_Feature_default_instance_._instance,
+  &::vector_tile::_Tile_Layer_default_instance_._instance,
+  &::vector_tile::_Tile_default_instance_._instance,
+};
+
+const char descriptor_table_protodef_vector_5ftile_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
+  "\n\021vector_tile.proto\022\013vector_tile\"\300\004\n\004Til"
+  "e\022\'\n\006layers\030\003 \003(\0132\027.vector_tile.Tile.Lay"
+  "er\032\241\001\n\005Value\022\024\n\014string_value\030\001 \001(\t\022\023\n\013fl"
+  "oat_value\030\002 \001(\002\022\024\n\014double_value\030\003 \001(\001\022\021\n"
+  "\tint_value\030\004 \001(\003\022\022\n\nuint_value\030\005 \001(\004\022\022\n\n"
+  "sint_value\030\006 \001(\022\022\022\n\nbool_value\030\007 \001(\010*\010\010\010"
+  "\020\200\200\200\200\002\032s\n\007Feature\022\r\n\002id\030\001 \001(\004:\0010\022\020\n\004tags"
+  "\030\002 \003(\rB\002\020\001\0221\n\004type\030\003 \001(\0162\032.vector_tile.T"
+  "ile.GeomType:\007UNKNOWN\022\024\n\010geometry\030\004 \003(\rB"
+  "\002\020\001\032\255\001\n\005Layer\022\022\n\007version\030\017 \002(\r:\0011\022\014\n\004nam"
+  "e\030\001 \002(\t\022+\n\010features\030\002 \003(\0132\031.vector_tile."
+  "Tile.Feature\022\014\n\004keys\030\003 \003(\t\022\'\n\006values\030\004 \003"
+  "(\0132\027.vector_tile.Tile.Value\022\024\n\006extent\030\005 "
+  "\001(\r:\0044096*\010\010\020\020\200\200\200\200\002\"\?\n\010GeomType\022\013\n\007UNKNO"
+  "WN\020\000\022\t\n\005POINT\020\001\022\016\n\nLINESTRING\020\002\022\013\n\007POLYG"
+  "ON\020\003*\005\010\020\020\200@"
+  ;
+static ::_pbi::once_flag descriptor_table_vector_5ftile_2eproto_once;
+const ::_pbi::DescriptorTable descriptor_table_vector_5ftile_2eproto = {
+    false, false, 611, descriptor_table_protodef_vector_5ftile_2eproto,
+    "vector_tile.proto",
+    &descriptor_table_vector_5ftile_2eproto_once, nullptr, 0, 4,
+    schemas, file_default_instances, TableStruct_vector_5ftile_2eproto::offsets,
+    file_level_metadata_vector_5ftile_2eproto, file_level_enum_descriptors_vector_5ftile_2eproto,
+    file_level_service_descriptors_vector_5ftile_2eproto,
+};
+PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_vector_5ftile_2eproto_getter() {
+  return &descriptor_table_vector_5ftile_2eproto;
+}
+
+// Force running AddDescriptors() at dynamic initialization time.
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY2 static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_vector_5ftile_2eproto(&descriptor_table_vector_5ftile_2eproto);
 namespace vector_tile {
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* Tile_GeomType_descriptor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_vector_5ftile_2eproto);
+  return file_level_enum_descriptors_vector_5ftile_2eproto[0];
+}
 bool Tile_GeomType_IsValid(int value) {
   switch (value) {
     case 0:
@@ -106,53 +225,6 @@ bool Tile_GeomType_IsValid(int value) {
   }
 }
 
-static ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<std::string> Tile_GeomType_strings[4] = {};
-
-static const char Tile_GeomType_names[] =
-  "LINESTRING"
-  "POINT"
-  "POLYGON"
-  "UNKNOWN";
-
-static const ::PROTOBUF_NAMESPACE_ID::internal::EnumEntry Tile_GeomType_entries[] = {
-  { {Tile_GeomType_names + 0, 10}, 2 },
-  { {Tile_GeomType_names + 10, 5}, 1 },
-  { {Tile_GeomType_names + 15, 7}, 3 },
-  { {Tile_GeomType_names + 22, 7}, 0 },
-};
-
-static const int Tile_GeomType_entries_by_number[] = {
-  3, // 0 -> UNKNOWN
-  1, // 1 -> POINT
-  0, // 2 -> LINESTRING
-  2, // 3 -> POLYGON
-};
-
-const std::string& Tile_GeomType_Name(
-    Tile_GeomType value) {
-  static const bool dummy =
-      ::PROTOBUF_NAMESPACE_ID::internal::InitializeEnumStrings(
-          Tile_GeomType_entries,
-          Tile_GeomType_entries_by_number,
-          4, Tile_GeomType_strings);
-  (void) dummy;
-  int idx = ::PROTOBUF_NAMESPACE_ID::internal::LookUpEnumName(
-      Tile_GeomType_entries,
-      Tile_GeomType_entries_by_number,
-      4, value);
-  return idx == -1 ? ::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString() :
-                     Tile_GeomType_strings[idx].get();
-}
-bool Tile_GeomType_Parse(
-    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, Tile_GeomType* value) {
-  int int_value;
-  bool success = ::PROTOBUF_NAMESPACE_ID::internal::LookUpEnumValue(
-      Tile_GeomType_entries, 4, name, &int_value);
-  if (success) {
-    *value = static_cast<Tile_GeomType>(int_value);
-  }
-  return success;
-}
 #if (__cplusplus < 201703) && (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
 constexpr Tile_GeomType Tile::UNKNOWN;
 constexpr Tile_GeomType Tile::POINT;
@@ -193,12 +265,12 @@ class Tile_Value::_Internal {
 
 Tile_Value::Tile_Value(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::MessageLite(arena, is_message_owned) {
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:vector_tile.Tile.Value)
 }
 Tile_Value::Tile_Value(const Tile_Value& from)
-  : ::PROTOBUF_NAMESPACE_ID::MessageLite() {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
   Tile_Value* const _this = this; (void)_this;
   new (&_impl_) Impl_{
       /*decltype(_impl_._extensions_)*/{}
@@ -212,7 +284,7 @@ Tile_Value::Tile_Value(const Tile_Value& from)
     , decltype(_impl_.uint_value_){}
     , decltype(_impl_.sint_value_){}};
 
-  _internal_metadata_.MergeFrom<std::string>(from._internal_metadata_);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   _impl_._extensions_.MergeFrom(internal_default_instance(), from._impl_._extensions_);
   _impl_.string_value_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
@@ -252,7 +324,7 @@ inline void Tile_Value::SharedCtor(
 
 Tile_Value::~Tile_Value() {
   // @@protoc_insertion_point(destructor:vector_tile.Tile.Value)
-  if (auto *arena = _internal_metadata_.DeleteReturnArena<std::string>()) {
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
   (void)arena;
     return;
   }
@@ -286,7 +358,7 @@ void Tile_Value::Clear() {
         reinterpret_cast<char*>(&_impl_.double_value_)) + sizeof(_impl_.sint_value_));
   }
   _impl_._has_bits_.Clear();
-  _internal_metadata_.Clear<std::string>();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
 const char* Tile_Value::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
@@ -302,6 +374,9 @@ const char* Tile_Value::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
           auto str = _internal_mutable_string_value();
           ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
+          #ifndef NDEBUG
+          ::_pbi::VerifyUTF8(str, "vector_tile.Tile.Value.string_value");
+          #endif  // !NDEBUG
         } else
           goto handle_unusual;
         continue;
@@ -375,7 +450,7 @@ const char* Tile_Value::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
     }
     ptr = UnknownFieldParse(
         tag,
-        _internal_metadata_.mutable_unknown_fields<std::string>(),
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
         ptr, ctx);
     CHK_(ptr != nullptr);
   }  // while
@@ -397,6 +472,10 @@ uint8_t* Tile_Value::_InternalSerialize(
   cached_has_bits = _impl_._has_bits_[0];
   // optional string string_value = 1;
   if (cached_has_bits & 0x00000001u) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->_internal_string_value().data(), static_cast<int>(this->_internal_string_value().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::SERIALIZE,
+      "vector_tile.Tile.Value.string_value");
     target = stream->WriteStringMaybeAliased(
         1, this->_internal_string_value(), target);
   }
@@ -442,8 +521,8 @@ uint8_t* Tile_Value::_InternalSerialize(
   internal_default_instance(), 8, 536870912, target, stream);
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = stream->WriteRaw(_internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).data(),
-        static_cast<int>(_internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).size()), target);
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:vector_tile.Tile.Value)
   return target;
@@ -499,22 +578,19 @@ size_t Tile_Value::ByteSizeLong() const {
     }
 
   }
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    total_size += _internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).size();
-  }
-  int cached_size = ::_pbi::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-void Tile_Value::CheckTypeAndMergeFrom(
-    const ::PROTOBUF_NAMESPACE_ID::MessageLite& from) {
-  MergeFrom(*::_pbi::DownCast<const Tile_Value*>(
-      &from));
-}
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Tile_Value::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    Tile_Value::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Tile_Value::GetClassData() const { return &_class_data_; }
 
-void Tile_Value::MergeFrom(const Tile_Value& from) {
-  Tile_Value* const _this = this;
+
+void Tile_Value::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<Tile_Value*>(&to_msg);
+  auto& from = static_cast<const Tile_Value&>(from_msg);
   // @@protoc_insertion_point(class_specific_merge_from_start:vector_tile.Tile.Value)
   GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
@@ -546,7 +622,7 @@ void Tile_Value::MergeFrom(const Tile_Value& from) {
     _this->_impl_._has_bits_[0] |= cached_has_bits;
   }
   _this->_impl_._extensions_.MergeFrom(internal_default_instance(), from._impl_._extensions_);
-  _this->_internal_metadata_.MergeFrom<std::string>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Tile_Value::CopyFrom(const Tile_Value& from) {
@@ -583,10 +659,11 @@ void Tile_Value::InternalSwap(Tile_Value* other) {
           reinterpret_cast<char*>(&other->_impl_.double_value_));
 }
 
-std::string Tile_Value::GetTypeName() const {
-  return "vector_tile.Tile.Value";
+::PROTOBUF_NAMESPACE_ID::Metadata Tile_Value::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_vector_5ftile_2eproto_getter, &descriptor_table_vector_5ftile_2eproto_once,
+      file_level_metadata_vector_5ftile_2eproto[0]);
 }
-
 
 // ===================================================================
 
@@ -603,12 +680,12 @@ class Tile_Feature::_Internal {
 
 Tile_Feature::Tile_Feature(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::MessageLite(arena, is_message_owned) {
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:vector_tile.Tile.Feature)
 }
 Tile_Feature::Tile_Feature(const Tile_Feature& from)
-  : ::PROTOBUF_NAMESPACE_ID::MessageLite() {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
   Tile_Feature* const _this = this; (void)_this;
   new (&_impl_) Impl_{
       decltype(_impl_._has_bits_){from._impl_._has_bits_}
@@ -620,7 +697,7 @@ Tile_Feature::Tile_Feature(const Tile_Feature& from)
     , decltype(_impl_.id_){}
     , decltype(_impl_.type_){}};
 
-  _internal_metadata_.MergeFrom<std::string>(from._internal_metadata_);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   ::memcpy(&_impl_.id_, &from._impl_.id_,
     static_cast<size_t>(reinterpret_cast<char*>(&_impl_.type_) -
     reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.type_));
@@ -645,7 +722,7 @@ inline void Tile_Feature::SharedCtor(
 
 Tile_Feature::~Tile_Feature() {
   // @@protoc_insertion_point(destructor:vector_tile.Tile.Feature)
-  if (auto *arena = _internal_metadata_.DeleteReturnArena<std::string>()) {
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
   (void)arena;
     return;
   }
@@ -677,7 +754,7 @@ void Tile_Feature::Clear() {
         reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.type_));
   }
   _impl_._has_bits_.Clear();
-  _internal_metadata_.Clear<std::string>();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
 const char* Tile_Feature::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
@@ -742,7 +819,7 @@ const char* Tile_Feature::_InternalParse(const char* ptr, ::_pbi::ParseContext* 
     }
     ptr = UnknownFieldParse(
         tag,
-        _internal_metadata_.mutable_unknown_fields<std::string>(),
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
         ptr, ctx);
     CHK_(ptr != nullptr);
   }  // while
@@ -794,8 +871,8 @@ uint8_t* Tile_Feature::_InternalSerialize(
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = stream->WriteRaw(_internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).data(),
-        static_cast<int>(_internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).size()), target);
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:vector_tile.Tile.Feature)
   return target;
@@ -851,22 +928,19 @@ size_t Tile_Feature::ByteSizeLong() const {
     }
 
   }
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    total_size += _internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).size();
-  }
-  int cached_size = ::_pbi::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-void Tile_Feature::CheckTypeAndMergeFrom(
-    const ::PROTOBUF_NAMESPACE_ID::MessageLite& from) {
-  MergeFrom(*::_pbi::DownCast<const Tile_Feature*>(
-      &from));
-}
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Tile_Feature::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    Tile_Feature::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Tile_Feature::GetClassData() const { return &_class_data_; }
 
-void Tile_Feature::MergeFrom(const Tile_Feature& from) {
-  Tile_Feature* const _this = this;
+
+void Tile_Feature::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<Tile_Feature*>(&to_msg);
+  auto& from = static_cast<const Tile_Feature&>(from_msg);
   // @@protoc_insertion_point(class_specific_merge_from_start:vector_tile.Tile.Feature)
   GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
@@ -884,7 +958,7 @@ void Tile_Feature::MergeFrom(const Tile_Feature& from) {
     }
     _this->_impl_._has_bits_[0] |= cached_has_bits;
   }
-  _this->_internal_metadata_.MergeFrom<std::string>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Tile_Feature::CopyFrom(const Tile_Feature& from) {
@@ -912,10 +986,11 @@ void Tile_Feature::InternalSwap(Tile_Feature* other) {
           reinterpret_cast<char*>(&other->_impl_.id_));
 }
 
-std::string Tile_Feature::GetTypeName() const {
-  return "vector_tile.Tile.Feature";
+::PROTOBUF_NAMESPACE_ID::Metadata Tile_Feature::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_vector_5ftile_2eproto_getter, &descriptor_table_vector_5ftile_2eproto_once,
+      file_level_metadata_vector_5ftile_2eproto[1]);
 }
-
 
 // ===================================================================
 
@@ -938,12 +1013,12 @@ class Tile_Layer::_Internal {
 
 Tile_Layer::Tile_Layer(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::MessageLite(arena, is_message_owned) {
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:vector_tile.Tile.Layer)
 }
 Tile_Layer::Tile_Layer(const Tile_Layer& from)
-  : ::PROTOBUF_NAMESPACE_ID::MessageLite() {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
   Tile_Layer* const _this = this; (void)_this;
   new (&_impl_) Impl_{
       /*decltype(_impl_._extensions_)*/{}
@@ -956,7 +1031,7 @@ Tile_Layer::Tile_Layer(const Tile_Layer& from)
     , decltype(_impl_.extent_){}
     , decltype(_impl_.version_){}};
 
-  _internal_metadata_.MergeFrom<std::string>(from._internal_metadata_);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   _impl_._extensions_.MergeFrom(internal_default_instance(), from._impl_._extensions_);
   _impl_.name_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
@@ -995,7 +1070,7 @@ inline void Tile_Layer::SharedCtor(
 
 Tile_Layer::~Tile_Layer() {
   // @@protoc_insertion_point(destructor:vector_tile.Tile.Layer)
-  if (auto *arena = _internal_metadata_.DeleteReturnArena<std::string>()) {
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
   (void)arena;
     return;
   }
@@ -1034,7 +1109,7 @@ void Tile_Layer::Clear() {
     _impl_.version_ = 1u;
   }
   _impl_._has_bits_.Clear();
-  _internal_metadata_.Clear<std::string>();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
 const char* Tile_Layer::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
@@ -1050,6 +1125,9 @@ const char* Tile_Layer::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
           auto str = _internal_mutable_name();
           ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
+          #ifndef NDEBUG
+          ::_pbi::VerifyUTF8(str, "vector_tile.Tile.Layer.name");
+          #endif  // !NDEBUG
         } else
           goto handle_unusual;
         continue;
@@ -1075,6 +1153,9 @@ const char* Tile_Layer::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
             auto str = _internal_add_keys();
             ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
             CHK_(ptr);
+            #ifndef NDEBUG
+            ::_pbi::VerifyUTF8(str, "vector_tile.Tile.Layer.keys");
+            #endif  // !NDEBUG
             if (!ctx->DataAvailable(ptr)) break;
           } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<26>(ptr));
         } else
@@ -1127,7 +1208,7 @@ const char* Tile_Layer::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
     }
     ptr = UnknownFieldParse(
         tag,
-        _internal_metadata_.mutable_unknown_fields<std::string>(),
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
         ptr, ctx);
     CHK_(ptr != nullptr);
   }  // while
@@ -1149,6 +1230,10 @@ uint8_t* Tile_Layer::_InternalSerialize(
   cached_has_bits = _impl_._has_bits_[0];
   // required string name = 1;
   if (cached_has_bits & 0x00000001u) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->_internal_name().data(), static_cast<int>(this->_internal_name().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::SERIALIZE,
+      "vector_tile.Tile.Layer.name");
     target = stream->WriteStringMaybeAliased(
         1, this->_internal_name(), target);
   }
@@ -1164,6 +1249,10 @@ uint8_t* Tile_Layer::_InternalSerialize(
   // repeated string keys = 3;
   for (int i = 0, n = this->_internal_keys_size(); i < n; i++) {
     const auto& s = this->_internal_keys(i);
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::VerifyUTF8StringNamedField(
+      s.data(), static_cast<int>(s.length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::SERIALIZE,
+      "vector_tile.Tile.Layer.keys");
     target = stream->WriteString(3, s, target);
   }
 
@@ -1192,8 +1281,8 @@ uint8_t* Tile_Layer::_InternalSerialize(
   internal_default_instance(), 16, 536870912, target, stream);
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = stream->WriteRaw(_internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).data(),
-        static_cast<int>(_internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).size()), target);
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:vector_tile.Tile.Layer)
   return target;
@@ -1267,22 +1356,19 @@ size_t Tile_Layer::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_extent());
   }
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    total_size += _internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).size();
-  }
-  int cached_size = ::_pbi::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-void Tile_Layer::CheckTypeAndMergeFrom(
-    const ::PROTOBUF_NAMESPACE_ID::MessageLite& from) {
-  MergeFrom(*::_pbi::DownCast<const Tile_Layer*>(
-      &from));
-}
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Tile_Layer::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    Tile_Layer::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Tile_Layer::GetClassData() const { return &_class_data_; }
 
-void Tile_Layer::MergeFrom(const Tile_Layer& from) {
-  Tile_Layer* const _this = this;
+
+void Tile_Layer::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<Tile_Layer*>(&to_msg);
+  auto& from = static_cast<const Tile_Layer&>(from_msg);
   // @@protoc_insertion_point(class_specific_merge_from_start:vector_tile.Tile.Layer)
   GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
@@ -1305,7 +1391,7 @@ void Tile_Layer::MergeFrom(const Tile_Layer& from) {
     _this->_impl_._has_bits_[0] |= cached_has_bits;
   }
   _this->_impl_._extensions_.MergeFrom(internal_default_instance(), from._impl_._extensions_);
-  _this->_internal_metadata_.MergeFrom<std::string>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Tile_Layer::CopyFrom(const Tile_Layer& from) {
@@ -1344,10 +1430,11 @@ void Tile_Layer::InternalSwap(Tile_Layer* other) {
   swap(_impl_.version_, other->_impl_.version_);
 }
 
-std::string Tile_Layer::GetTypeName() const {
-  return "vector_tile.Tile.Layer";
+::PROTOBUF_NAMESPACE_ID::Metadata Tile_Layer::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_vector_5ftile_2eproto_getter, &descriptor_table_vector_5ftile_2eproto_once,
+      file_level_metadata_vector_5ftile_2eproto[2]);
 }
-
 
 // ===================================================================
 
@@ -1357,19 +1444,19 @@ class Tile::_Internal {
 
 Tile::Tile(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::MessageLite(arena, is_message_owned) {
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:vector_tile.Tile)
 }
 Tile::Tile(const Tile& from)
-  : ::PROTOBUF_NAMESPACE_ID::MessageLite() {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
   Tile* const _this = this; (void)_this;
   new (&_impl_) Impl_{
       /*decltype(_impl_._extensions_)*/{}
     , decltype(_impl_.layers_){from._impl_.layers_}
     , /*decltype(_impl_._cached_size_)*/{}};
 
-  _internal_metadata_.MergeFrom<std::string>(from._internal_metadata_);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   _impl_._extensions_.MergeFrom(internal_default_instance(), from._impl_._extensions_);
   // @@protoc_insertion_point(copy_constructor:vector_tile.Tile)
 }
@@ -1387,7 +1474,7 @@ inline void Tile::SharedCtor(
 
 Tile::~Tile() {
   // @@protoc_insertion_point(destructor:vector_tile.Tile)
-  if (auto *arena = _internal_metadata_.DeleteReturnArena<std::string>()) {
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
   (void)arena;
     return;
   }
@@ -1412,7 +1499,7 @@ void Tile::Clear() {
 
   _impl_._extensions_.Clear();
   _impl_.layers_.Clear();
-  _internal_metadata_.Clear<std::string>();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
 const char* Tile::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
@@ -1450,7 +1537,7 @@ const char* Tile::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
     }
     ptr = UnknownFieldParse(
         tag,
-        _internal_metadata_.mutable_unknown_fields<std::string>(),
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
         ptr, ctx);
     CHK_(ptr != nullptr);
   }  // while
@@ -1481,8 +1568,8 @@ uint8_t* Tile::_InternalSerialize(
   internal_default_instance(), 16, 8192, target, stream);
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = stream->WriteRaw(_internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).data(),
-        static_cast<int>(_internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).size()), target);
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:vector_tile.Tile)
   return target;
@@ -1505,22 +1592,19 @@ size_t Tile::ByteSizeLong() const {
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
   }
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    total_size += _internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).size();
-  }
-  int cached_size = ::_pbi::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-void Tile::CheckTypeAndMergeFrom(
-    const ::PROTOBUF_NAMESPACE_ID::MessageLite& from) {
-  MergeFrom(*::_pbi::DownCast<const Tile*>(
-      &from));
-}
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Tile::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    Tile::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Tile::GetClassData() const { return &_class_data_; }
 
-void Tile::MergeFrom(const Tile& from) {
-  Tile* const _this = this;
+
+void Tile::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<Tile*>(&to_msg);
+  auto& from = static_cast<const Tile&>(from_msg);
   // @@protoc_insertion_point(class_specific_merge_from_start:vector_tile.Tile)
   GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
@@ -1528,7 +1612,7 @@ void Tile::MergeFrom(const Tile& from) {
 
   _this->_impl_.layers_.MergeFrom(from._impl_.layers_);
   _this->_impl_._extensions_.MergeFrom(internal_default_instance(), from._impl_._extensions_);
-  _this->_internal_metadata_.MergeFrom<std::string>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Tile::CopyFrom(const Tile& from) {
@@ -1555,10 +1639,11 @@ void Tile::InternalSwap(Tile* other) {
   _impl_.layers_.InternalSwap(&other->_impl_.layers_);
 }
 
-std::string Tile::GetTypeName() const {
-  return "vector_tile.Tile";
+::PROTOBUF_NAMESPACE_ID::Metadata Tile::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_vector_5ftile_2eproto_getter, &descriptor_table_vector_5ftile_2eproto_once,
+      file_level_metadata_vector_5ftile_2eproto[3]);
 }
-
 
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace vector_tile

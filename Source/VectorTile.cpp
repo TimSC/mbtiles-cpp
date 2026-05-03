@@ -125,7 +125,9 @@ void DecodeVectorTile::DecodeTileData(const std::string &tileData)
 
 			map<string, string> tagMap;
 			for(int tagNum = 0; tagNum < feature.tags_size(); tagNum+=2)
-			{	
+			{
+				if(tagNum+1 >= feature.tags_size())
+					throw runtime_error("Malformed tile: odd number of tags");
 				const ::vector_tile::Tile_Value &value = layer.values(feature.tags(tagNum+1));
 				tagMap[layer.keys(feature.tags(tagNum))] = ValueToStr(value);
 			}
@@ -174,6 +176,8 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 		{
 			for(unsigned j=0; j < cmdCount; j++)
 			{
+				if(i+2 >= (unsigned)feature.geometry_size())
+					throw runtime_error("Malformed tile: geometry data truncated in MoveTo");
 				unsigned v = feature.geometry(i+1);
 				int value1 = ((v >> 1) ^ (-(v & 1)));
 				v = feature.geometry(i+2);
@@ -203,6 +207,8 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 		{
 			for(unsigned j=0; j < cmdCount; j++)
 			{
+				if(i+2 >= (unsigned)feature.geometry_size())
+					throw runtime_error("Malformed tile: geometry data truncated in LineTo");
 				if(prevCmdId != 2)
 				{
 					points.push_back(Point2D(prevx, prevy));
@@ -255,9 +261,9 @@ void DecodeVectorTile::DecodeGeometry(const ::vector_tile::Tile_Feature &feature
 		}
 	}
 
-	if (feature.type() == vector_tile::Tile_GeomType_LINESTRING)
+	if (feature.type() == vector_tile::Tile_GeomType_LINESTRING && !points.empty())
 		linesOut.push_back(points);
-	if (feature.type() == vector_tile::Tile_GeomType_POLYGON)
+	if (feature.type() == vector_tile::Tile_GeomType_POLYGON && currentPolygonSet)
 		polygonsOut.push_back(currentPolygon);
 }
 
