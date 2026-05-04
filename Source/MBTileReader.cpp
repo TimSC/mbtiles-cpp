@@ -13,11 +13,12 @@ struct ListTilesContext {
 
 MBTileReader::MBTileReader(const char *filename)
 {
-	this->db = NULL;
+	this->db = nullptr;
 
 	int status = sqlite3_open_v2(filename, &this->db, SQLITE_OPEN_READONLY, nullptr);
 	if(status){
 		sqlite3_close(this->db);
+		this->db = nullptr;
 		throw runtime_error("Error opening database");
 	}
 
@@ -29,13 +30,15 @@ MBTileReader::MBTileReader(const char *filename)
 		err += zErrMsg;
 		sqlite3_free(zErrMsg);
 		sqlite3_close(this->db);
+		this->db = nullptr;
 		throw runtime_error(err);
 	}
 }
 
 MBTileReader::~MBTileReader()
 {
-	sqlite3_close(this->db);
+	if (this->db != nullptr)
+		sqlite3_close(this->db);
 }
 
 int MBTileReader::MetadataCallbackStatic(void *obj, int argc, char **argv, char **azColName)
@@ -92,6 +95,7 @@ int MBTileReader::ListTilesCallbackStatic(void *rawPtr, int argc, char **argv, c
 
 void MBTileReader::ListTiles(TileInfoRows &tileInfoRowsOut)
 {
+	if (this->db == nullptr) return;
 	ListTilesContext ctx{&tileInfoRowsOut, ""};
 	char *zErrMsg = NULL;
 	int status = sqlite3_exec(this->db, "SELECT zoom_level, tile_column, tile_row FROM tiles;",
@@ -112,6 +116,7 @@ void MBTileReader::GetTile(unsigned int zoomLevel,
 	unsigned int tileRow,
 	string &blobOut)
 {
+	if (this->db == nullptr) return;
 	sqlite3_stmt *stmtRaw = NULL;
 	blobOut.clear();
 	int status = sqlite3_prepare(this->db,
